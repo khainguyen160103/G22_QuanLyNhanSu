@@ -1,6 +1,6 @@
 # QuanLyNhanSu_G22
 
-origin branch : Mains
+origin branch : Main
 
 Folder Structure 
 name-project/
