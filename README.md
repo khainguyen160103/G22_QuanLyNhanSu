@@ -8,6 +8,7 @@ name-project/
       --img 
       --js 
       --css
+      --fonts
 
 Code Convention : Camel case
 
