@@ -68,6 +68,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
+    <Content Include="qlNhanVien.css" />
+    <Content Include="qlTaiKhoan.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -75,6 +77,12 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="qlTaiKhoan.aspx.cs">
+      <DependentUpon>qlTaiKhoan.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="qlTaiKhoan.aspx.designer.cs">
+      <DependentUpon>qlTaiKhoan.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
