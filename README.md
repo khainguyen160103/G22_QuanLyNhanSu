@@ -1,14 +1,6 @@
-# QuanLyNhanSu_G22
-
 origin branch : Main
 
-Folder Structure 
-name-project/
-    -asset/ 
-      --img 
-      --js 
-      --css
-      --fonts
+Folder Structure name-project/ -asset/ --img --js --css --fonts
 
 Code Convention : Camel case
 
