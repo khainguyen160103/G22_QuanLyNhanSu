@@ -73,32 +73,7 @@ namespace quanLyTaiKhoanNV
 
         protected void btnCapNhat_Click(object sender, EventArgs e)
         {
-            if (!validateInputs())
-            {
-                return; // Do not proceed if inputs are not valid
-            }
-
-            List<TaiKhoanNV> taiKhoanList = (List<TaiKhoanNV>)Session["TaiKhoanList"];
-            TaiKhoanNV taiKhoan = taiKhoanList.Find(t => t.MaTaiKhoan == txtMaTaiKhoan.Text);
-
-            if (taiKhoan != null)
-            {
-                // Update account information
-                taiKhoan.TaiKhoan = txtTaiKhoan.Text;
-                taiKhoan.MatKhau = txtMatKhau.Text;
-                taiKhoan.TinhTrang = ddlTinhTrang.SelectedItem.Text;
-                taiKhoan.MaNhanVien = txtMaNhanVien.Text;
-                taiKhoan.MaQuyen = txtMaQuyen.Text;
-
-                Session["TaiKhoanList"] = taiKhoanList;
-                BindGrid();
-
-                ClearFields();
-            }
-            else
-            {
-                Response.Redirect("qlTaiKhoan.aspx?alertMessage=Tài khoản không tồn tại");
-            }
+            
         }
 
         protected void btnLamMoi_Click(object sender, EventArgs e)
@@ -108,21 +83,7 @@ namespace quanLyTaiKhoanNV
 
         protected void btnXoaTaiKhoan_Click(object sender, EventArgs e)
         {
-           List<TaiKhoanNV> taiKhoanList = (List<TaiKhoanNV>)Session["TaiKhoanList"];
-            TaiKhoanNV taiKhoan = taiKhoanList.Find(t => t.MaTaiKhoan == txtMaTaiKhoan.Text);
-
-            if (taiKhoan != null)
-            {
-                taiKhoanList.Remove(taiKhoan);
-                Session["TaiKhoanList"] = taiKhoanList;
-                BindGrid();
-
-                ClearFields();
-            }
-            else
-            {
-                Response.Redirect("qlTaiKhoan.aspx?alertMessage=Tài khoản không tồn tại");
-            }
+           
         }
 
         protected void btnTimKiemTaiKhoan_Click(object sender, EventArgs e)
