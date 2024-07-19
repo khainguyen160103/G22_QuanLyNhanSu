@@ -9,7 +9,7 @@
 
 namespace QuanLyNhanSu
 {
-
+    //.
 
     public partial class qlPhongBan
     {

@@ -31,7 +31,7 @@ namespace QuanLyNhanSu
             string description = txtDescription.Text.Trim();
 
             bool hasError = false;
-
+            // validate
             if (string.IsNullOrEmpty(name))
             {
                 lblErrorName.Text = "Tên phòng ban không được để trống!";
