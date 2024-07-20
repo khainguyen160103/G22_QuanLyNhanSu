@@ -110,7 +110,7 @@ namespace QuanLyNhanSu.DangNhap
             else
             {
                 setSession(taikhoan);
-                Response.Redirect("FrmDoiMatKhau.aspx");
+                Response.Redirect("FrmTrangChu.aspx");
             }
 
 
