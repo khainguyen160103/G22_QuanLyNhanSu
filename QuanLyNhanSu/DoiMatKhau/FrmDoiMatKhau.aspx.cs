@@ -52,7 +52,7 @@ namespace QuanLyNhanSu.DoiMatKhau
             }
             else
             {
-                string connectionString = ConfigurationManager.ConnectionStrings["YourConnectionString"].ConnectionString;
+                string connectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
                 using (SqlConnection sqlcon = new SqlConnection(connectionString))
                 {
                     sqlcon.Open();
@@ -103,7 +103,7 @@ namespace QuanLyNhanSu.DoiMatKhau
             string message = checkvalid(matkhaucu, matkhaumoi, nhaplaimatkhau);
             if (message == "")
             {
-                string connectString = ConfigurationManager.ConnectionStrings["YourConnectionString"].ConnectionString;
+                string connectString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
                 using (SqlConnection sqlcon = new SqlConnection(connectString))
                 {
                     sqlcon.Open();

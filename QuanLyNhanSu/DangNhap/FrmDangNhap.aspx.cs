@@ -28,7 +28,7 @@ namespace QuanLyNhanSu.DangNhap
             }
             else
             {
-                string connectionString = ConfigurationManager.ConnectionStrings["YourConnectionString"].ConnectionString;
+                string connectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
                 using (SqlConnection sqlcon = new SqlConnection(connectionString))
                 {
                     sqlcon.Open();
