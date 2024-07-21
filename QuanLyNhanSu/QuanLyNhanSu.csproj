@@ -69,6 +69,7 @@
   <ItemGroup>
     <Content Include="Global.asax" />
     <Content Include="qlLuong.aspx" />
+    <Content Include="qlLuong.sql" />
     <Content Include="qlNhanVien.css" />
     <Content Include="qlTaiKhoan.aspx" />
     <Content Include="Web.config" />
