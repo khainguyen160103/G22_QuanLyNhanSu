@@ -7,7 +7,7 @@
       "RelativeMoniker": "D:0:0:{2EFBC297-35BF-49FD-AF9B-1247B06DBB21}|QuanLyNhanSu\\QuanLyNhanSu.csproj|solutionrelative:quanlynhansu\\dangnhap\\frmdangnhap.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2EFBC297-35BF-49FD-AF9B-1247B06DBB21}|QuanLyNhanSu\\QuanLyNhanSu.csproj|c:\\git2\\g22_quanlynhansu\\quanlynhansu\\dangnhap\\login.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "AbsoluteMoniker": "D:0:0:{2EFBC297-35BF-49FD-AF9B-1247B06DBB21}|QuanLyNhanSu\\QuanLyNhanSu.csproj|C:\\git2\\G22_QuanLyNhanSu\\quanlynhansu\\dangnhap\\login.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
       "RelativeMoniker": "D:0:0:{2EFBC297-35BF-49FD-AF9B-1247B06DBB21}|QuanLyNhanSu\\QuanLyNhanSu.csproj|solutionrelative:quanlynhansu\\dangnhap\\login.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
     },
     {
@@ -32,7 +32,7 @@
               "RelativeDocumentMoniker": "QuanLyNhanSu\\DangNhap\\FrmDangNhap.aspx.cs",
               "ToolTip": "C:\\git2\\G22_QuanLyNhanSu\\QuanLyNhanSu\\DangNhap\\FrmDangNhap.aspx.cs",
               "RelativeToolTip": "QuanLyNhanSu\\DangNhap\\FrmDangNhap.aspx.cs",
-              "ViewState": "AQIAAAsAAAAAAAAAAAAxwCUAAAAAAAAA",
+              "ViewState": "AQIAACYAAAAAAAAAAAAYwEUAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-21T17:39:09.1Z",
               "EditorCaption": ""
@@ -47,8 +47,7 @@
               "RelativeToolTip": "QuanLyNhanSu\\DangNhap\\Login.css",
               "ViewState": "AQIAAH4AAAAAAAAAAAAswJ0AAAAFAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2024-07-21T17:35:56.506Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-21T17:35:56.506Z"
             },
             {
               "$type": "Document",

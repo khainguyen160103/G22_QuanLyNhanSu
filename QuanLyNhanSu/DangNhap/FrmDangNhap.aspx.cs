@@ -35,6 +35,38 @@ namespace QuanLyNhanSu.DangNhap
             }
             return 1;
         }
+        protected int login(string tenTK, string mk)
+        {
+            int check = isUserNameExit(tenTK);
+            if (check == 0)
+            {
+                return 0;
+            }
+            else
+            {
+                string qr = "SELECT COUNT(*) FROM tbl_TAIKHOAN WHERE sTaikhoan = @tenTK and sMatkhau COLLATE Latin1_General_CS_AS = @matkhau";
+                string connectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
 
+                using (SqlConnection sqlcon = new SqlConnection(connectionString))
+                {
+                    sqlcon.Open();
+                    using (SqlCommand commam = new SqlCommand(qr, sqlcon))
+                    {
+                        commam.Parameters.AddWithValue("@tenTK", tenTK);
+                        commam.Parameters.AddWithValue("@matkhau", mk);
+
+                        int n = (int)commam.ExecuteScalar();
+                        if (n == 0)
+                        {
+                            return 2;
+                        }
+                        else
+                        {
+                            return 1;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
