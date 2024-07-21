@@ -68,5 +68,28 @@ namespace QuanLyNhanSu.DangNhap
                 }
             }
         }
+        protected void setSession(string Maquyen, string tenTK, string MK)
+        {
+            string query = "SELECT FK_sMaquyen FROM tbl_TAIKHOAN WHERE sTaikhoan = @tenTK";
+            string connectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                using (SqlCommand cmd = new SqlCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@tenTK", tenTK);
+                    SqlDataReader dr = cmd.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        Maquyen = dr.GetString(0);
+                    }
+                    dr.Close();
+                }
+            }
+            Session["MaQuyen"] = Maquyen;
+            Session["TaiKhoan"] = tenTK;
+            Session["MatKhau"] = MK;
+
+        }
     }
 }
