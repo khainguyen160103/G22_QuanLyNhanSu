@@ -9,55 +9,100 @@
 
 namespace QuanLyNhanSu
 {
-    //.
+
 
     public partial class qlPhongBan
     {
 
         /// <summary>
-        /// mainForm control.
+        /// form1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlForm mainForm;
+        protected global::System.Web.UI.HtmlControls.HtmlForm form1;
 
         /// <summary>
-        /// txtName control.
+        /// lblMaPB control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtName;
+        protected global::System.Web.UI.WebControls.Label lblMaPB;
 
         /// <summary>
-        /// lblErrorName control.
+        /// txtMaPB control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblErrorName;
+        protected global::System.Web.UI.WebControls.TextBox txtMaPB;
 
         /// <summary>
-        /// txtDescription control.
+        /// lblErrorMaPB control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDescription;
+        protected global::System.Web.UI.WebControls.Label lblErrorMaPB;
 
         /// <summary>
-        /// lblErrorDescription control.
+        /// lblTenPB control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblErrorDescription;
+        protected global::System.Web.UI.WebControls.Label lblTenPB;
+
+        /// <summary>
+        /// txtTenPB control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtTenPB;
+
+        /// <summary>
+        /// lblErrorTenPB control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblErrorTenPB;
+
+        /// <summary>
+        /// lblMota control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMota;
+
+        /// <summary>
+        /// txtMota control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtMota;
+
+        /// <summary>
+        /// lblErrorMoTa control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblErrorMoTa;
 
         /// <summary>
         /// btnAdd control.
@@ -69,31 +114,31 @@ namespace QuanLyNhanSu
         protected global::System.Web.UI.WebControls.Button btnAdd;
 
         /// <summary>
-        /// btnUpdate control.
+        /// btnReset control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnUpdate;
+        protected global::System.Web.UI.WebControls.Button btnReset;
 
         /// <summary>
-        /// hfEditIndex control.
+        /// lblMessage control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hfEditIndex;
+        protected global::System.Web.UI.WebControls.Label lblMessage;
 
         /// <summary>
-        /// btnCancel control.
+        /// lblSearch control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnCancel;
+        protected global::System.Web.UI.WebControls.Label lblSearch;
 
         /// <summary>
         /// txtSearch control.
@@ -114,12 +159,12 @@ namespace QuanLyNhanSu
         protected global::System.Web.UI.WebControls.Button btnSearch;
 
         /// <summary>
-        /// departmentRepeater control.
+        /// gv_phongBan control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater departmentRepeater;
+        protected global::System.Web.UI.WebControls.GridView gv_phongBan;
     }
 }
