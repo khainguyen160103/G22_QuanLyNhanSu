@@ -67,10 +67,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DoiMatKhau\DoiMatKhau.css" />
+    <Content Include="DoiMatKhau\FrmDoiMatKhau.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DoiMatKhau\FrmDoiMatKhau.aspx.cs">
+      <DependentUpon>FrmDoiMatKhau.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DoiMatKhau\FrmDoiMatKhau.aspx.designer.cs">
+      <DependentUpon>FrmDoiMatKhau.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
