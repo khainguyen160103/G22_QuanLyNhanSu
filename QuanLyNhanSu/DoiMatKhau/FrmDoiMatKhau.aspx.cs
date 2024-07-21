@@ -87,5 +87,67 @@ namespace QuanLyNhanSu.DoiMatKhau
             }
             return message;
         }
+        protected void btnDoiMatKhau_Click(object sender, EventArgs e)
+        {
+            string MS_001 = "Vui lòng nhập đủ thông tin";
+            string MS_002 = "Mật khẩu cần có 8 ký tự trở lên, bao gồm chữ số, chữ thường, chữ hoa";
+            string MS_003 = "Mật khẩu nhập lại không đúng";
+            string MS_004 = "Mật khẩu cũ không đúng";
+
+            string matkhaucu = txtMatKhauCu.Value;
+            string matkhaumoi = txtMatKhauMoi.Value;
+            string nhaplaimatkhau = txtNhapLaiMatKhauMoi.Value;
+            string taikhoan = (string)Session["TaiKhoan"];
+
+
+            string message = checkvalid(matkhaucu, matkhaumoi, nhaplaimatkhau);
+            if (message == "")
+            {
+                changePassword(taikhoan, matkhaumoi);
+            }
+            else if (message == MS_002)
+            {
+                messageMK2.InnerText = MS_002;
+                messageMK3.InnerText = "";
+            }
+            else if (message == MS_003)
+            {
+                messageMK3.InnerText = MS_003;
+                messageMK1.InnerText = "";
+                messageMK2.InnerText = "";
+            }
+            else if (message == MS_004)
+            {
+                messageMK1.InnerText = MS_004;
+                messageMK2.InnerText = "";
+                messageMK3.InnerText = "";
+            }
+            else
+            {
+                messageMK3.InnerText = MS_001;
+                messageMK2.InnerText = "";
+                messageMK1.InnerText = "";
+            }
+
+
+        }
+        protected void changePassword(string taikhoan, string matkhaumoi)
+        {
+            string connectString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            using (SqlConnection sqlcon = new SqlConnection(connectString))
+            {
+                sqlcon.Open();
+                string query = "UPDATE tbl_TAIKHOAN set sMatkhau = @matkhaumoi where sTaikhoan = @taikhoan";
+                using (SqlCommand cmd = new SqlCommand(query, sqlcon))
+                {
+                    cmd.Parameters.AddWithValue("@matkhaumoi", matkhaumoi);
+                    cmd.Parameters.AddWithValue("@taikhoan", taikhoan);
+
+                    cmd.ExecuteNonQuery();
+
+                }
+            }
+            Response.Redirect("FrmDangNhap.aspx");
+        }
     }
 }
