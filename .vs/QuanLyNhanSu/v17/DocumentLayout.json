@@ -1,0 +1,54 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\git2\\G22_QuanLyNhanSu\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{2EFBC297-35BF-49FD-AF9B-1247B06DBB21}|QuanLyNhanSu\\QuanLyNhanSu.csproj|c:\\git2\\g22_quanlynhansu\\quanlynhansu\\dangnhap\\login.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{2EFBC297-35BF-49FD-AF9B-1247B06DBB21}|QuanLyNhanSu\\QuanLyNhanSu.csproj|solutionrelative:quanlynhansu\\dangnhap\\login.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2EFBC297-35BF-49FD-AF9B-1247B06DBB21}|QuanLyNhanSu\\QuanLyNhanSu.csproj|c:\\git2\\g22_quanlynhansu\\quanlynhansu\\dangnhap\\frmdangnhap.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}",
+      "RelativeMoniker": "D:0:0:{2EFBC297-35BF-49FD-AF9B-1247B06DBB21}|QuanLyNhanSu\\QuanLyNhanSu.csproj|solutionrelative:quanlynhansu\\dangnhap\\frmdangnhap.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Login.css",
+              "DocumentMoniker": "C:\\git2\\G22_QuanLyNhanSu\\QuanLyNhanSu\\DangNhap\\Login.css",
+              "RelativeDocumentMoniker": "QuanLyNhanSu\\DangNhap\\Login.css",
+              "ToolTip": "C:\\git2\\G22_QuanLyNhanSu\\QuanLyNhanSu\\DangNhap\\Login.css",
+              "RelativeToolTip": "QuanLyNhanSu\\DangNhap\\Login.css",
+              "ViewState": "AQIAAH4AAAAAAAAAAAAswJ0AAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2024-07-21T17:35:56.506Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "FrmDangNhap.aspx",
+              "DocumentMoniker": "C:\\git2\\G22_QuanLyNhanSu\\QuanLyNhanSu\\DangNhap\\FrmDangNhap.aspx",
+              "RelativeDocumentMoniker": "QuanLyNhanSu\\DangNhap\\FrmDangNhap.aspx",
+              "ToolTip": "C:\\git2\\G22_QuanLyNhanSu\\QuanLyNhanSu\\DangNhap\\FrmDangNhap.aspx",
+              "RelativeToolTip": "QuanLyNhanSu\\DangNhap\\FrmDangNhap.aspx",
+              "LogicalView": "7651a703-06e5-11d1-8ebd-00a0c90f26ea",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000195|",
+              "WhenOpened": "2024-07-21T17:35:36.224Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
