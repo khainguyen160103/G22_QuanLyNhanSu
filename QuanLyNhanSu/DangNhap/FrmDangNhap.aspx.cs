@@ -15,6 +15,50 @@ namespace QuanLyNhanSu.DangNhap
         {
 
         }
+        protected void btnDangNhap_Click(object sender, EventArgs e)
+        {
+            string MaQ = "";
+
+            string MS_001 = "Không để bỏ trống !";
+            string DN_02 = "Tài khoản không tồn tại !";
+            string DN_03 = "Sai mật khẩu !";
+
+            string user = txtTenTaiKhoan.Value;
+            string pass = txtMatKhau.Value;
+
+            if (!checkValidDangNhap(user, pass))
+            {
+                messageMK.InnerText = MS_001;
+            }
+            else if (login(user, pass) == 0)
+            {
+                messageTK.InnerText = DN_02;
+                messageMK.InnerText = "";
+            }
+            else if (login(user, pass) == 2)
+            {
+                messageMK.InnerText = DN_03;
+                messageTK.InnerText = "";
+            }
+            else
+            {
+                setSession(MaQ, user, pass);
+                Response.Redirect("../DoiMatKhau/FrmDoiMatKhau.aspx");
+
+            }
+
+
+
+        }
+        protected bool checkValidDangNhap(string tenTK, string mk)
+        {
+            if (tenTK.Equals("") || mk.Equals(""))
+            {
+                return false;
+            }
+
+            return true;
+        }
         protected int isUserNameExit(string tenTK)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
