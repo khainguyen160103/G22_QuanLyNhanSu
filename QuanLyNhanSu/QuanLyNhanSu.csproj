@@ -67,14 +67,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="QuanLyKhenThuong\FrmQuanLyKhenThuong.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="QuanLyKhenThuong\FrmQuanLyKhenThuong.aspx.cs">
+      <DependentUpon>FrmQuanLyKhenThuong.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="QuanLyKhenThuong\FrmQuanLyKhenThuong.aspx.designer.cs">
+      <DependentUpon>FrmQuanLyKhenThuong.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QuanLyKhenThuong\KhenThuong.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
