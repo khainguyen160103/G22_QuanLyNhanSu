@@ -168,13 +168,13 @@ namespace QuanLyNhanSu
         protected global::System.Web.UI.WebControls.Label lblMaNV;
 
         /// <summary>
-        /// txtMaNV control.
+        /// ddlMaNV control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtMaNV;
+        protected global::System.Web.UI.WebControls.DropDownList ddlMaNV;
 
         /// <summary>
         /// lblErrorMaNV control.

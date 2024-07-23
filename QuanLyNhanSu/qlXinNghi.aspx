@@ -41,7 +41,7 @@
             </div>
             <div class="col-md-6">
                 <asp:Label ID="lblMaNV" runat="server" Text="Mã nhân viên" CssClass="form-label mb-2 d-block"></asp:Label>
-                <asp:TextBox ID="txtMaNV" runat="server" CssClass="form-control"></asp:TextBox>
+                <asp:DropDownList ID="ddlMaNV" runat="server" CssClass="form-control"></asp:DropDownList>
                 <asp:Label ID="lblErrorMaNV" runat="server" ForeColor="Red"></asp:Label>
             </div>
             <div class="col-md-6">
@@ -121,7 +121,7 @@
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="Mã nhân viên">
                         <EditItemTemplate>
-                            <asp:TextBox ID="txtMaNV" runat="server" Text='<%# Bind("FK_sMaNV") %>' CssClass="form-control"></asp:TextBox>
+                            <asp:DropDownList ID="ddlMaNV" runat="server" CssClass="form-control"></asp:DropDownList>
                         </EditItemTemplate>
                         <ItemTemplate>
                             <asp:Label ID="lblMaNV" runat="server" Text='<%# Bind("FK_sMaNV") %>'></asp:Label>

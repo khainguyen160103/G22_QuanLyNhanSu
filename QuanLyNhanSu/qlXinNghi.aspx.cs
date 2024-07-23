@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
@@ -18,19 +19,110 @@ namespace QuanLyNhanSu
             if (!IsPostBack)
             {
                 LoadGridData();
+                LoadEmployeeIDs();
+                BindEmployeeDropdown(ddlMaNV);
             }
         }
+
+        private DataTable GetEmployeeData()
+        {
+            string strConnect = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            using (SqlConnection sqlConnection = new SqlConnection(strConnect))
+            {
+                string sql = "SELECT PK_sMaNV FROM tbl_NHANVIEN";
+                SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sql, sqlConnection);
+                DataTable dt = new DataTable();
+                sqlDataAdapter.Fill(dt);
+                return dt;
+            }
+        }
+
+        private void BindEmployeeDropdown(DropDownList ddl)
+        {
+            DataTable dt = GetEmployeeData();
+            ddl.DataSource = dt;
+            ddl.DataTextField = "PK_sMaNV";
+            ddl.DataValueField = "PK_sMaNV";
+            ddl.DataBind();
+            ddl.Items.Insert(0, new ListItem("Chọn mã nhân viên", ""));
+        }
+
+        private void LoadEmployeeIDs()
+        {
+            string strConnect = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+
+            using (SqlConnection sqlConnection = new SqlConnection(strConnect))
+            {
+                try
+                {
+                    sqlConnection.Open();
+                    string sql = "SELECT PK_sMaNV FROM tbl_NHANVIEN";
+                    SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection);
+                    SqlDataReader reader = sqlCommand.ExecuteReader();
+
+                    ddlMaNV.DataSource = reader;
+                    ddlMaNV.DataTextField = "PK_sMaNV"; 
+                    ddlMaNV.DataValueField = "PK_sMaNV"; 
+                    ddlMaNV.DataBind();
+
+                    ddlMaNV.Items.Insert(0, new ListItem("Chọn mã nhân viên", ""));
+                }
+                catch (Exception ex)
+                {
+                    lblMessage.Text = "Đã có lỗi: Mã nhân viên";
+                }
+            }
+        }
+
+
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
             LoadGridData(txtSearch.Text);
         }
 
+
+
         protected void gv_donXinNghi_RowEditing(object sender, GridViewEditEventArgs e)
         {
+            // Set the GridView to edit mode
             gv_donXinNghi.EditIndex = e.NewEditIndex;
+
+            // Reload the GridView data
             LoadGridData(txtSearch.Text);
+
+            // Get the GridView row being edited
+            GridViewRow row = gv_donXinNghi.Rows[e.NewEditIndex];
+
+            // Find the DropDownList and Label controls
+            DropDownList ddlMaNV = (DropDownList)row.FindControl("ddlMaNV");
+            Label lblMaNV = (Label)row.FindControl("lblMaNV");
+
+            if (ddlMaNV != null)
+            {
+                // Bind the DropDownList with employee data
+                BindEmployeeDropdown(ddlMaNV);
+
+                if (lblMaNV != null)
+                {
+                    // Get the current MaNV value
+                    string currentMaNV = lblMaNV.Text;
+
+                    // Ensure the DropDownList contains the currentMaNV value
+                    if (ddlMaNV.Items.FindByValue(currentMaNV) != null)
+                    {
+                        ddlMaNV.SelectedValue = currentMaNV;
+                    }
+                }
+            }
+            else
+            {
+                // Handle the case where ddlMaNV is not found
+                lblMessage.Text = "DropDownList 'ddlMaNV' not found.";
+                lblMessage.ForeColor = System.Drawing.Color.Red;
+            }
         }
+
 
         protected void gv_donXinNghi_RowUpdating(object sender, GridViewUpdateEventArgs e)
         {
@@ -40,7 +132,7 @@ namespace QuanLyNhanSu
             string loaiDon = ((TextBox)row.FindControl("txtLoaiDon")).Text;
             string ngayBDTxt = ((TextBox)row.FindControl("txtNgayBD")).Text;
             string ngayKTTxt = ((TextBox)row.FindControl("txtNgayKT")).Text;
-            string maNV = ((TextBox)row.FindControl("txtMaNV")).Text;
+            string maNV = ((DropDownList)row.FindControl("ddlMaNV")).SelectedValue;
             string lyDo = ((TextBox)row.FindControl("txtLyDo")).Text;
 
             DateTime ngayLap;
@@ -196,9 +288,8 @@ namespace QuanLyNhanSu
             lblErrorLoaiDon.Text = string.Empty;
             lblErrorNgayBD.Text = string.Empty;
             lblErrorNgayKT.Text = string.Empty;
-            lblErrorMaNV.Text = string.Empty;
             lblErrorLyDo.Text = string.Empty;
-
+            ddlMaNV.SelectedIndex = 0;
             lblMessage.Text = string.Empty;
         }
 
@@ -330,15 +421,16 @@ namespace QuanLyNhanSu
                 hasError = true;
             }
 
-            if (string.IsNullOrEmpty(txtMaNV.Text.Trim()))
+            if (string.IsNullOrWhiteSpace(ddlMaNV.SelectedValue))
             {
-                lblErrorMaNV.Text = "Mã nhân viên không được để trống!";
+                lblErrorMaNV.Text = "Vui lòng chọn mã nhân viên";
                 hasError = true;
             }
             else
             {
                 lblErrorMaNV.Text = string.Empty;
             }
+
 
             if (string.IsNullOrEmpty(txtLyDo.Text.Trim()))
             {
@@ -360,7 +452,7 @@ namespace QuanLyNhanSu
             txtLoaiDon.Text = string.Empty;
             txtNgayBD.Text = string.Empty;
             txtNgayKT.Text = string.Empty;
-            txtMaNV.Text = string.Empty;
+            ddlMaNV.SelectedIndex = 0;
             txtLyDo.Text = string.Empty;
         }
 
@@ -383,6 +475,16 @@ namespace QuanLyNhanSu
                 lblMessage.ForeColor = System.Drawing.Color.Red;
                 return;
             }
+
+            string selectedMaNV = ddlMaNV.SelectedValue;
+
+            if (string.IsNullOrEmpty(selectedMaNV))
+            {
+                lblMessage.Text = "Vui lòng chọn mã nhân viên.";
+                lblMessage.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
+
             string strConnect = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
 
             using (SqlConnection sqlConnection = new SqlConnection(strConnect))
@@ -397,7 +499,7 @@ namespace QuanLyNhanSu
                     sqlCommand.Parameters.AddWithValue("@Loaidon", txtLoaiDon.Text.Trim());
                     sqlCommand.Parameters.AddWithValue("@NgayBD", ngayBD);
                     sqlCommand.Parameters.AddWithValue("@NgayKT", ngayKT);
-                    sqlCommand.Parameters.AddWithValue("@MaNV", txtMaNV.Text.Trim());
+                    sqlCommand.Parameters.AddWithValue("@MaNV", selectedMaNV);
                     sqlCommand.Parameters.AddWithValue("@Lydo", txtLyDo.Text.Trim());
 
                     int rowsAffected = sqlCommand.ExecuteNonQuery();
