@@ -8,9 +8,15 @@
     <style>
         .container{
             display:flex;
-            flex-direction:column;
+            flex-direction:row;
+            margin-bottom:20px;
+            margin:0 auto;
+            width:1000px;
         }
         .container>div{
+            margin:10px;
+        }
+        .container>div>div{
             display:flex;
             flex-direction:row;
             margin-top:15px;
@@ -30,8 +36,27 @@
          width:50px;
           height:25px;
         }
+        #Button3{
+          margin-right:10px;
+          width:70px;
+          height:25px;
+        }
+        #Button4{
+          margin-right:10px;
+          width:50px;
+          height:25px;
+        }
         form{
-            margin-bottom:20px;
+            
+        }
+        #Table1{
+            display:block;
+            margin:0 auto;
+            width:1200px;
+        }
+        .lsButton{
+                margin-left: 35%;
+                margin-bottom: 20px;
         }
     </style>
 </head>
@@ -39,37 +64,46 @@
     <form id="form1" runat="server">
         <div class="container">
             <div>
-                <label for="MaKT">Mã khen thưởng : </label>
-                <input type="text" id="MaKT" runat="server" />
+                <div>
+                    <label for="MaKT">Mã khen thưởng : </label>
+                    <input type="text" id="MaKT" runat="server" />
+                </div>
+
+                <div>
+                    <label for="LoaiDon">Loại đơn : </label>
+                    <input type="text" id="LoaiDon" runat="server" />
+                </div>
+
+                <div>
+                    <label for="MaNV">Mã nhân viên : </label>
+                    <input type="text" runat="server" id="MaNV" />
+                </div>
             </div>
 
             <div>
-                <label for="LoaiDon">Loại đơn : </label>
-                <input type="text" id="LoaiDon" runat="server" />
-            </div>
+                <div>
+                    <label for="MucKhenThuong">Mức khen thưởng kỉ luật : </label>
+                    <input type="text" runat="server" id="MucKhenThuong" />
+                </div>
 
-            <div>
-                <label for="MaNV">Mã nhân viên : </label>
-                <input type="text" runat="server" id="MaNV"/>
-            </div>
-
-            <div>
-                <label for="MucKhenThuong">Mức khen thưởng kỉ luật : </label>
-                <input type="text" runat="server" id="MucKhenThuong" />
-            </div>
-
-            <div>
-                <label for="LyDo">Lý do : </label>
-                <input type="text" runat="server" id="LyDo" />
+                <div>
+                    <label for="LyDo">Lý do : </label>
+                    <input type="text" runat="server" id="LyDo" />
+                </div>
             </div>
         </div>
         <br />
         <asp:Label ID="Label1" runat="server" Text="" BackColor="Red"></asp:Label>
         <br />
-        <asp:Button ID="Button1" runat="server" Text="Thêm" OnClick="Button1_Click"/>
-        <asp:Button ID="Button2" runat="server" Text="Reset" OnClick="Button2_Click"/>
+        <div class="lsButton">
+            <asp:Button ID="Button1" runat="server" Text="Thêm" OnClick="Button1_Click" />
+            <asp:Button ID="Button3" runat="server" Text="Tìm kiếm" OnClick="Button3_Click" />
+            <asp:Button ID="Button4" runat="server" Text="Sửa" OnClick="Button4_Click" />
+            <asp:Button ID="Button2" runat="server" Text="Reset" OnClick="Button2_Click" />
+        </div>
+        
     </form>
-    <asp:Table ID="Table1" runat="server" BorderColor="Black" BorderWidth="1px" CellSpacing="20" >
+    <asp:Table ID="Table1" runat="server" BorderColor="Black" BorderWidth="1px" CellSpacing="40" >
         <asp:TableRow>
             <asp:TableHeaderCell Text="Mã khen thưởng"/>
             <asp:TableHeaderCell Text="Ngày lập" />

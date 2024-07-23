@@ -160,5 +160,114 @@ namespace QuanLyNhanSu
             MucKhenThuong.Value = "";
             LyDo.Value = "";
         }
+
+        protected void Button3_Click(object sender, EventArgs e)
+        {
+            Label1.Text = "";
+            string maKT = MaKT.Value;
+            string query = $"select * from tbl_KHENTHUONG where PK_sMaKT = '{maKT}'";
+            string stringConnect = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            using (SqlConnection sql = new SqlConnection(stringConnect))
+            {
+                sql.Open();
+                using (SqlCommand cmd = new SqlCommand(query , sql))
+                {
+                    SqlDataReader dr = cmd.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        TableRow row = new TableRow();
+
+                        TableCell cellId = new TableCell();
+                        cellId.Text = dr.GetString(0);
+                        row.Cells.Add(cellId);
+
+                        TableCell cellNgayLap = new TableCell();
+                        cellNgayLap.Text = dr.GetDateTime(1).ToString();
+                        row.Cells.Add(cellNgayLap);
+
+                        TableCell cellLoaiDon = new TableCell();
+                        cellLoaiDon.Text = dr.GetString(2).ToString();
+                        row.Cells.Add(cellLoaiDon);
+
+                        TableCell cellMaNV = new TableCell();
+                        cellMaNV.Text = dr.GetString(3).ToString();
+                        row.Cells.Add(cellMaNV);
+
+                        TableCell cellMucKT = new TableCell();
+                        cellMucKT.Text = dr.GetString(4).ToString();
+                        row.Cells.Add(cellMucKT);
+
+                        TableCell cellLyDo = new TableCell();
+                        cellLyDo.Text = dr.GetString(5).ToString();
+                        row.Cells.Add(cellLyDo);
+
+                        Table1.Controls.Add(row);
+                    }
+                    dr.Close();
+                }
+            }
+
+        }
+
+        protected void Button4_Click(object sender, EventArgs e)
+        {
+            string ma = MaKT.Value;
+            string loaidon = LoaiDon.Value;
+            string maNV = MaNV.Value;
+            string MucKT = MucKhenThuong.Value;
+            string ldo = LyDo.Value;
+
+            string stringConnect = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            string query = $"update tbl_KHENTHUONG set sLoaiDon = N'{loaidon}', FK_sMaNV = '{maNV}', sMucKTKL = N'{MucKT}' , sLydo = N'{ldo}' where PK_sMaKT = '{ma}'";
+            using (SqlConnection sqlcon = new SqlConnection(stringConnect))
+            {
+                sqlcon.Open();
+                using (SqlCommand cmd = new SqlCommand(query,sqlcon))
+                {
+                    int result = cmd.ExecuteNonQuery();
+                    if (result>0)
+                    {
+                        Label1.Text = "Cập nhật thành công";
+                        List<KhenThuong> lsKT = GetKhenThuongs();
+                        foreach (var kt in lsKT)
+                        {
+                            TableRow row = new TableRow();
+
+                            TableCell cellId = new TableCell();
+                            cellId.Text = kt.maKT.ToString();
+                            row.Cells.Add(cellId);
+
+                            TableCell cellNgayLap = new TableCell();
+                            cellNgayLap.Text = kt.ngaylap.ToString();
+                            row.Cells.Add(cellNgayLap);
+
+                            TableCell cellLoaiDon = new TableCell();
+                            cellLoaiDon.Text = kt.loaidon.ToString();
+                            row.Cells.Add(cellLoaiDon);
+
+                            TableCell cellMaNV = new TableCell();
+                            cellMaNV.Text = kt.maNV.ToString();
+                            row.Cells.Add(cellMaNV);
+
+                            TableCell cellMucKT = new TableCell();
+                            cellMucKT.Text = kt.mucKTKL.ToString();
+                            row.Cells.Add(cellMucKT);
+
+                            TableCell cellLyDo = new TableCell();
+                            cellLyDo.Text = kt.lydo.ToString();
+                            row.Cells.Add(cellLyDo);
+
+                            Table1.Controls.Add(row);
+                        }
+                    }
+                    else
+                    {
+                        Label1.Text = "Cập nhật thất bại";
+                    }
+                }
+                sqlcon.Close();
+            }
+
+        }
     }
 }
