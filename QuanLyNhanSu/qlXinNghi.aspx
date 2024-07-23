@@ -89,10 +89,10 @@
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="Ngày lập">
                         <EditItemTemplate>
-                            <asp:TextBox ID="txtNgayLap" runat="server" Text='<%# Bind("dNgaylap", "{0:MM/dd/yyyy}") %>' CssClass="form-control"></asp:TextBox>
+                            <asp:TextBox ID="txtNgayLap" runat="server" Text='<%# Bind("dNgaylap", "{0:dd/MM/yyyy}") %>' CssClass="form-control"></asp:TextBox>
                         </EditItemTemplate>
                         <ItemTemplate>
-                            <asp:Label ID="lblNgayLap" runat="server" Text='<%# Bind("dNgaylap", "{0:MM/dd/yyyy}") %>'></asp:Label>
+                            <asp:Label ID="lblNgayLap" runat="server" Text='<%# Bind("dNgaylap", "{0:dd/MM/yyyy}") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="Loại đơn">
@@ -105,18 +105,18 @@
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="Ngày bắt đầu">
                         <EditItemTemplate>
-                            <asp:TextBox ID="txtNgayBD" runat="server" Text='<%# Bind("dNgaybatdau", "{0:MM/dd/yyyy}") %>' CssClass="form-control"></asp:TextBox>
+                            <asp:TextBox ID="txtNgayBD" runat="server" Text='<%# Bind("dNgaybatdau", "{0:dd/MM/yyyy}") %>' CssClass="form-control"></asp:TextBox>
                         </EditItemTemplate>
                         <ItemTemplate>
-                            <asp:Label ID="lblNgayBD" runat="server" Text='<%# Bind("dNgaybatdau", "{0:MM/dd/yyyy}") %>'></asp:Label>
+                            <asp:Label ID="lblNgayBD" runat="server" Text='<%# Bind("dNgaybatdau", "{0:dd/MM/yyyy}") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="Ngày kết thúc">
                         <EditItemTemplate>
-                            <asp:TextBox ID="txtNgayKT" runat="server" Text='<%# Bind("dNgayketthuc", "{0:MM/dd/yyyy}") %>' CssClass="form-control"></asp:TextBox>
+                            <asp:TextBox ID="txtNgayKT" runat="server" Text='<%# Bind("dNgayketthuc", "{0:dd/MM/yyyy}") %>' CssClass="form-control"></asp:TextBox>
                         </EditItemTemplate>
                         <ItemTemplate>
-                            <asp:Label ID="lblNgayKT" runat="server" Text='<%# Bind("dNgayketthuc", "{0:MM/dd/yyyy}") %>'></asp:Label>
+                            <asp:Label ID="lblNgayKT" runat="server" Text='<%# Bind("dNgayketthuc", "{0:dd/MM/yyyy}") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="Mã nhân viên">

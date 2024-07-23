@@ -115,10 +115,10 @@ namespace QuanLyNhanSu
                     string sql = "UPDATE tbl_DONXINNGHI SET dNgaylap = @NgayLap, sLoaidon = @LoaiDon, dNgaybatdau = @NgayBD, dNgayketthuc = @NgayKT, FK_sMaNV = @MaNV, sLydo = @LyDo WHERE PK_sMaDon = @MaDon";
                     SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection);
                     sqlCommand.Parameters.AddWithValue("@MaDon", maDon);
-                    sqlCommand.Parameters.AddWithValue("@NgayLap", ngayLapTxt);
+                    sqlCommand.Parameters.AddWithValue("@NgayLap", ngayLap);
                     sqlCommand.Parameters.AddWithValue("@LoaiDon", loaiDon);
-                    sqlCommand.Parameters.AddWithValue("@NgayBD", ngayBDTxt);
-                    sqlCommand.Parameters.AddWithValue("@NgayKT", ngayKTTxt);
+                    sqlCommand.Parameters.AddWithValue("@NgayBD", ngayBD);
+                    sqlCommand.Parameters.AddWithValue("@NgayKT", ngayKT);
                     sqlCommand.Parameters.AddWithValue("@MaNV", maNV);
                     sqlCommand.Parameters.AddWithValue("@LyDo", lyDo);
 
@@ -139,7 +139,7 @@ namespace QuanLyNhanSu
                 }
                 catch (Exception ex)
                 {
-                    lblMessage.Text = "Đã có lỗi: Mã nhân viên không tồn tại";
+                    lblMessage.Text = "Đã có lỗi: Mã nhân viên không tồn tại !!!";
                     lblMessage.ForeColor = System.Drawing.Color.Red;
                 }
             }
@@ -371,6 +371,18 @@ namespace QuanLyNhanSu
             {
                 return;
             }
+
+            DateTime ngayLap, ngayBD, ngayKT;
+            bool isNgayLapValid = DateTime.TryParseExact(txtNgayLap.Text.Trim(), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out ngayLap);
+            bool isNgayBDValid = DateTime.TryParseExact(txtNgayBD.Text.Trim(), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out ngayBD);
+            bool isNgayKTValid = DateTime.TryParseExact(txtNgayKT.Text.Trim(), "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out ngayKT);
+
+            if (!isNgayLapValid || !isNgayBDValid || !isNgayKTValid)
+            {
+                lblMessage.Text = "Ngày chưa hợp lệ";
+                lblMessage.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
             string strConnect = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
 
             using (SqlConnection sqlConnection = new SqlConnection(strConnect))
@@ -381,10 +393,10 @@ namespace QuanLyNhanSu
                     string sql = "INSERT INTO tbl_DONXINNGHI (PK_sMaDon, dNgaylap, sLoaidon, dNgaybatdau, dNgayketthuc, FK_sMaNV, sLydo) VALUES (@MaDon, @Ngaylap, @Loaidon, @NgayBD, @NgayKT, @MaNV, @Lydo)";
                     SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection);
                     sqlCommand.Parameters.AddWithValue("@MaDon", txtMaDon.Text.Trim());
-                    sqlCommand.Parameters.AddWithValue("@Ngaylap", txtNgayLap.Text.Trim());
+                    sqlCommand.Parameters.AddWithValue("@Ngaylap", ngayLap);
                     sqlCommand.Parameters.AddWithValue("@Loaidon", txtLoaiDon.Text.Trim());
-                    sqlCommand.Parameters.AddWithValue("@NgayBD", txtNgayBD.Text.Trim());
-                    sqlCommand.Parameters.AddWithValue("@NgayKT", txtNgayKT.Text.Trim());
+                    sqlCommand.Parameters.AddWithValue("@NgayBD", ngayBD);
+                    sqlCommand.Parameters.AddWithValue("@NgayKT", ngayKT);
                     sqlCommand.Parameters.AddWithValue("@MaNV", txtMaNV.Text.Trim());
                     sqlCommand.Parameters.AddWithValue("@Lydo", txtLyDo.Text.Trim());
 
@@ -403,7 +415,7 @@ namespace QuanLyNhanSu
                 }
                 catch (Exception ex)
                 {
-                    lblMessage.Text = "Mã đơn không được trùng hoặc không tồn tại Mã nhân viên";
+                    lblMessage.Text = "Trùng mã đơn hoặc không tồn tại Mã nhân viên";
                     lblMessage.ForeColor = System.Drawing.Color.Red;
                 }
             }
