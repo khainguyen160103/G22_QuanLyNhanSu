@@ -98,12 +98,30 @@
         .form-actions button.cancel:hover {
             background-color: #c82333;
         }
+        .search-group {
+            margin-bottom: 20px;
+        }
+        .search-group input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
     </style>
+    <script type="text/javascript">
+        function confirmAction(message) {
+            return confirm(message);
+        }
+    </script>
 </head>
 <body>
     <div class="container">
         <h1>Quản lý lương nhân viên</h1>
         <form id="form1" runat="server">
+            <div class="search-group">
+                <asp:Label ID="lblSearch" runat="server" Text="Tìm kiếm theo Mã NV:" />
+                <asp:TextBox ID="txtSearchMaNV" runat="server" CssClass="form-control" />
+                <asp:Button ID="btnSearch" runat="server" Text="Tìm kiếm" OnClick="btnSearch_Click" />
+            </div>
             <table>
                 <thead>
                     <tr>
@@ -115,7 +133,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <%-- Nội dung sẽ được thêm động ở đây --%>
                     <asp:Repeater ID="Repeater1" runat="server">
                         <ItemTemplate>
                             <tr>
@@ -124,8 +141,8 @@
                                 <td><%# Eval("fLuongCB") %></td>
                                 <td><%# Eval("fThuong") %></td>
                                 <td class="action-buttons">
-                                    <asp:Button ID="EditButton" runat="server" Text="Sửa" CommandName="Edit" CommandArgument='<%# Eval("sMaNV") %>' OnClick="EditButton_Click" />
-                                    <asp:Button ID="DeleteButton" runat="server" Text="Xóa" CommandName="Delete" CommandArgument='<%# Eval("sMaNV") %>' OnClick="DeleteButton_Click" />
+                                    <asp:Button ID="EditButton" runat="server" Text="Sửa" CommandName="Edit" CommandArgument='<%# Eval("sMaNV") %>' OnClick="EditButton_Click"  />
+                                    <asp:Button ID="DeleteButton" runat="server" Text="Xóa" CommandName="Delete" CommandArgument='<%# Eval("sMaNV") %>' OnClick="DeleteButton_Click" OnClientClick="return confirmAction('Bạn có chắc chắn muốn xóa thông tin này?');" />
                                 </td>
                             </tr>
                         </ItemTemplate>
@@ -152,10 +169,22 @@
                 <asp:TextBox ID="txtThuong" runat="server" CssClass="form-control" />
             </div>
             <div class="form-actions">
-                <asp:Button ID="btnSave" runat="server" Text="Lưu" CssClass="save" OnClick="btnSave_Click" />
+                <asp:Button ID="btnSave" runat="server" Text="Lưu" CssClass="save" OnClick="btnSave_Click" OnClientClick="return confirmSave();" />
                 <asp:Button ID="btnCancel" runat="server" Text="Hủy" CssClass="cancel" OnClick="btnCancel_Click" />
             </div>
         </form>
     </div>
 </body>
+    <script type="text/javascript">
+        function confirmSave() {
+            var btnSave = document.getElementById('<%= btnSave.ClientID %>');
+            var isEditMode = btnSave.getAttribute('data-editmode') === 'true';
+            var action = isEditMode ? 'sửa' : 'thêm mới';
+            return confirm('Bạn có chắc chắn muốn ' + action + ' thông tin này?');
+        }
+
+        function confirmDelete() {
+            return confirm('Bạn có chắc chắn muốn xóa thông tin này?');
+        }
+</script>
 </html>
