@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -35,12 +36,74 @@ namespace QuanLyNhanSu
         {
             GridViewRow row = gv_donXinNghi.Rows[e.RowIndex];
             string maDon = ((TextBox)row.FindControl("txtMaDon")).Text;
-            string ngayLap = ((TextBox)row.FindControl("txtNgayLap")).Text;
+            string ngayLapTxt = ((TextBox)row.FindControl("txtNgayLap")).Text;
             string loaiDon = ((TextBox)row.FindControl("txtLoaiDon")).Text;
-            string ngayBD = ((TextBox)row.FindControl("txtNgayBD")).Text;
-            string ngayKT = ((TextBox)row.FindControl("txtNgayKT")).Text;
+            string ngayBDTxt = ((TextBox)row.FindControl("txtNgayBD")).Text;
+            string ngayKTTxt = ((TextBox)row.FindControl("txtNgayKT")).Text;
             string maNV = ((TextBox)row.FindControl("txtMaNV")).Text;
-            string lyDo = ((TextBox)row.FindControl("txtlyDo")).Text;
+            string lyDo = ((TextBox)row.FindControl("txtLyDo")).Text;
+
+            DateTime ngayLap;
+            bool isValidNgayLap = DateTime.TryParseExact(
+                ngayLapTxt,
+                "dd/MM/yyyy",
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out ngayLap
+            );
+
+            if (!isValidNgayLap || ngayLap > DateTime.Now)
+            {
+                lblMessage.Text = "Ngày lập không hợp lệ hoặc lớn hơn ngày hiện tại.";
+                lblMessage.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
+
+            DateTime ngayBD;
+            bool isValidNgayBD = DateTime.TryParseExact(
+                ngayBDTxt,
+                "dd/MM/yyyy",
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out ngayBD
+            );
+
+            if (!isValidNgayBD || ngayBD > DateTime.Now)
+            {
+                lblMessage.Text = "Ngày bắt đầu không hợp lệ hoặc lớn hơn ngày hiện tại.";
+                lblMessage.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
+
+            DateTime ngayKT;
+            bool isValidNgayKT = DateTime.TryParseExact(
+                ngayKTTxt,
+                "dd/MM/yyyy",
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out ngayKT
+            );
+
+            if (!isValidNgayKT || ngayKT > DateTime.Now)
+            {
+                lblMessage.Text = "Ngày kết thúc không hợp lệ hoặc lớn hơn ngày hiện tại.";
+                lblMessage.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
+
+            if (ngayLap > ngayBD)
+            {
+                lblMessage.Text = "Ngày lập phải nhỏ hơn hoặc bằng ngày bắt đầu.";
+                lblMessage.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
+
+            if (ngayBD >= ngayKT)
+            {
+                lblMessage.Text = "Ngày bắt đầu phải nhỏ hơn ngày kết thúc.";
+                lblMessage.ForeColor = System.Drawing.Color.Red;
+                return;
+            }
 
             string strConnect = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
 
@@ -52,10 +115,10 @@ namespace QuanLyNhanSu
                     string sql = "UPDATE tbl_DONXINNGHI SET dNgaylap = @NgayLap, sLoaidon = @LoaiDon, dNgaybatdau = @NgayBD, dNgayketthuc = @NgayKT, FK_sMaNV = @MaNV, sLydo = @LyDo WHERE PK_sMaDon = @MaDon";
                     SqlCommand sqlCommand = new SqlCommand(sql, sqlConnection);
                     sqlCommand.Parameters.AddWithValue("@MaDon", maDon);
-                    sqlCommand.Parameters.AddWithValue("@NgayLap", ngayLap);
+                    sqlCommand.Parameters.AddWithValue("@NgayLap", ngayLapTxt);
                     sqlCommand.Parameters.AddWithValue("@LoaiDon", loaiDon);
-                    sqlCommand.Parameters.AddWithValue("@NgayBD", ngayBD);
-                    sqlCommand.Parameters.AddWithValue("@NgayKT", ngayKT);
+                    sqlCommand.Parameters.AddWithValue("@NgayBD", ngayBDTxt);
+                    sqlCommand.Parameters.AddWithValue("@NgayKT", ngayKTTxt);
                     sqlCommand.Parameters.AddWithValue("@MaNV", maNV);
                     sqlCommand.Parameters.AddWithValue("@LyDo", lyDo);
 
@@ -163,6 +226,7 @@ namespace QuanLyNhanSu
                 lblErrorLoaiDon.Text = string.Empty;
             }
 
+            DateTime ngayLap = DateTime.MinValue;
             if (string.IsNullOrEmpty(txtNgayLap.Text.Trim()))
             {
                 lblErrorNgayLap.Text = "Ngày lập không được để trống!";
@@ -171,8 +235,28 @@ namespace QuanLyNhanSu
             else
             {
                 lblErrorNgayLap.Text = string.Empty;
+
+                bool isValidNgayLap = DateTime.TryParseExact(
+                    txtNgayLap.Text,
+                    "dd/MM/yyyy",
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.None,
+                    out ngayLap
+                );
+
+                if (!isValidNgayLap)
+                {
+                    lblErrorNgayLap.Text = "Ngày lập không hợp lệ.";
+                    hasError = true;
+                }
+                else if (ngayLap > DateTime.Now)
+                {
+                    lblErrorNgayLap.Text = "Ngày lập không thể lớn hơn ngày hiện tại.";
+                    hasError = true;
+                }
             }
 
+            DateTime ngayBD = DateTime.MinValue;
             if (string.IsNullOrEmpty(txtNgayBD.Text.Trim()))
             {
                 lblErrorNgayBD.Text = "Ngày bắt đầu không được để trống!";
@@ -181,8 +265,28 @@ namespace QuanLyNhanSu
             else
             {
                 lblErrorNgayBD.Text = string.Empty;
+
+                bool isValidNgayBD = DateTime.TryParseExact(
+                    txtNgayBD.Text,
+                    "dd/MM/yyyy",
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.None,
+                    out ngayBD
+                );
+
+                if (!isValidNgayBD)
+                {
+                    lblErrorNgayBD.Text = "Ngày bắt đầu không hợp lệ.";
+                    hasError = true;
+                }
+                else if (ngayBD > DateTime.Now)
+                {
+                    lblErrorNgayBD.Text = "Ngày bắt đầu không thể lớn hơn ngày hiện tại.";
+                    hasError = true;
+                }
             }
 
+            DateTime ngayKT = DateTime.MinValue;
             if (string.IsNullOrEmpty(txtNgayKT.Text.Trim()))
             {
                 lblErrorNgayKT.Text = "Ngày kết thúc không được để trống!";
@@ -191,6 +295,39 @@ namespace QuanLyNhanSu
             else
             {
                 lblErrorNgayKT.Text = string.Empty;
+
+                bool isValidNgayKT = DateTime.TryParseExact(
+                    txtNgayKT.Text,
+                    "dd/MM/yyyy",
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.None,
+                    out ngayKT
+                );
+
+                if (!isValidNgayKT)
+                {
+                    lblErrorNgayKT.Text = "Ngày kết thúc không hợp lệ.";
+                    hasError = true;
+                }
+                else if (ngayKT > DateTime.Now)
+                {
+                    lblErrorNgayKT.Text = "Ngày kết thúc không thể lớn hơn ngày hiện tại.";
+                    hasError = true;
+                }
+            }
+
+            if (ngayLap != DateTime.MinValue && ngayBD != DateTime.MinValue && ngayLap > ngayBD)
+            {
+                lblErrorNgayLap.Text = "Ngày lập phải nhỏ hơn hoặc bằng ngày bắt đầu.";
+                lblErrorNgayBD.Text = "Ngày bắt đầu phải lớn hơn ngày lập.";
+                hasError = true;
+            }
+
+            if (ngayBD != DateTime.MinValue && ngayKT != DateTime.MinValue && ngayBD >= ngayKT)
+            {
+                lblErrorNgayBD.Text = "Ngày bắt đầu phải nhỏ hơn ngày kết thúc.";
+                lblErrorNgayKT.Text = "Ngày kết thúc phải lớn hơn ngày bắt đầu.";
+                hasError = true;
             }
 
             if (string.IsNullOrEmpty(txtMaNV.Text.Trim()))
