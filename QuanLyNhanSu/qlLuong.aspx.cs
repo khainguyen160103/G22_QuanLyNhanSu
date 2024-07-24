@@ -21,18 +21,22 @@ namespace QuanLyNhanSu
             }
         }
 
-        protected void LoadData()
+        private void LoadData()
         {
             using (SqlConnection con = new SqlConnection(connectionString))
             {
                 con.Open();
-                SqlDataAdapter da = new SqlDataAdapter("SELECT * FROM tblLuongNV", con);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-                Repeater1.DataSource = dt;
+                SqlCommand cmd = new SqlCommand("SELECT * FROM tblLuongNV", con);
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                Repeater1.DataSource = reader;
                 Repeater1.DataBind();
+
+                reader.Close();
                 con.Close();
             }
+
+            lblMessage.Text = ""; // Clear error message after loading data
         }
 
         protected void btnSave_Click(object sender, EventArgs e)
@@ -42,15 +46,27 @@ namespace QuanLyNhanSu
             decimal luongCB;
             decimal thuong;
 
+            lblMessage.Text = ""; // Clear error message
+
             if (!decimal.TryParse(txtLuongCB.Text.Trim(), out luongCB))
             {
                 lblMessage.Text = "Lương cơ bản không hợp lệ.";
+                return;
+            }
+            if (luongCB <= 0)
+            {
+                lblMessage.Text = "Lương cơ bản phải lớn hơn 0.";
                 return;
             }
 
             if (!decimal.TryParse(txtThuong.Text.Trim(), out thuong))
             {
                 lblMessage.Text = "Thưởng không hợp lệ.";
+                return;
+            }
+            if (thuong <= 0)
+            {
+                lblMessage.Text = "Thưởng phải lớn hơn 0.";
                 return;
             }
 
