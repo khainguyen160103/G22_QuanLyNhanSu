@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 
 namespace quanLyTaiKhoanNV
 {
@@ -17,115 +20,159 @@ namespace quanLyTaiKhoanNV
 
     public partial class qlTaiKhoan : System.Web.UI.Page
     {
+        private string connectionString = ConfigurationManager.ConnectionStrings["QuanLyLuongNVConnectionString"].ConnectionString;
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                // Initialize or retrieve session list of accounts
-                if (Session["TaiKhoanList"] == null)
+                LoadData();
+                ViewState["EditMode"] = false;
+            }
+        }
+
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            LoadData(txtSearchMaTK.Text.Trim());
+        }
+
+        private void LoadData(string searchMaTK = "")
+        {
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                con.Open();
+                SqlCommand cmd;
+                if (string.IsNullOrEmpty(searchMaTK))
                 {
-                    Session["TaiKhoanList"] = new List<TaiKhoanNV>();
+                    cmd = new SqlCommand("SELECT * FROM tblTaiKhoan", con);
+                }
+                else
+                {
+                    cmd = new SqlCommand("SELECT * FROM tblTaiKhoan WHERE sMaTK LIKE @searchMaTK", con);
+                    cmd.Parameters.AddWithValue("@searchMaTK", "%" + searchMaTK + "%");
                 }
 
-                BindGrid();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                Repeater1.DataSource = reader;
+                Repeater1.DataBind();
+
+                reader.Close();
+                con.Close();
             }
 
-            // Display alert message if passed via query string
-            if (!string.IsNullOrEmpty(Request.QueryString["alertMessage"]))
-            {
-                string alertMessage = Request.QueryString["alertMessage"];
-                ClientScript.RegisterStartupScript(this.GetType(), "alert", $"alert('{alertMessage}');", true);
-            }
+            lblMessage.Text = ""; // Clear error message after loading data
         }
 
-        protected void btnThemMoi_Click(object sender, EventArgs e)
+        protected void EditButton_Click(object sender, EventArgs e)
         {
-            if (!validateInputs())
-            {
-                return; // Do not proceed if inputs are not valid
-            }
+            string maTK = ((Button)sender).CommandArgument;
 
-            List<TaiKhoanNV> taiKhoanList = (List<TaiKhoanNV>)Session["TaiKhoanList"];
-            TaiKhoanNV newTaiKhoan = new TaiKhoanNV
+            using (SqlConnection con = new SqlConnection(connectionString))
             {
-                MaTaiKhoan = txtMaTaiKhoan.Text,
-                TaiKhoan = txtTaiKhoan.Text,
-                MatKhau = txtMatKhau.Text,
-                TinhTrang = ddlTinhTrang.SelectedItem.Text,
-                MaNhanVien = txtMaNhanVien.Text,
-                MaQuyen = txtMaQuyen.Text
-            };
+                con.Open();
+                SqlCommand cmd = new SqlCommand("SELECT * FROM tblTaiKhoan WHERE sMaTK=@sMaTK", con);
+                cmd.Parameters.AddWithValue("@sMaTK", maTK);
+                SqlDataReader reader = cmd.ExecuteReader();
 
-            // Check if account with the same ID already exists
-            if (taiKhoanList.Exists(t => t.MaTaiKhoan == newTaiKhoan.MaTaiKhoan))
-            {
-                Response.Redirect("qlTaiKhoan.aspx?alertMessage=Tài khoản đã tồn tại");
-            }
-            else
-            {
-                taiKhoanList.Add(newTaiKhoan);
-                Session["TaiKhoanList"] = taiKhoanList;
+                if (reader.Read())
+                {
+                    txtMaTK.Text = reader["sMaTK"].ToString();
+                    txtTenTK.Text = reader["sTenTK"].ToString();
+                    txtMatKhau.Text = reader["sMatKhau"].ToString();
 
-                BindGrid();
-                ClearFields();
+                    ViewState["EditMode"] = true;
+                    btnSave.Text = "Sửa";
+                    btnSave.Attributes["data-editmode"] = "true";
+                }
+
+                reader.Close();
+                con.Close();
             }
         }
 
-        protected void btnCapNhat_Click(object sender, EventArgs e)
+        protected void DeleteButton_Click(object sender, EventArgs e)
         {
-            
+            string maTK = ((Button)sender).CommandArgument;
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                con.Open();
+                SqlCommand cmd = new SqlCommand("DELETE FROM tblTaiKhoan WHERE sMaTK=@sMaTK", con);
+                cmd.Parameters.AddWithValue("@sMaTK", maTK);
+
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+
+            LoadData();
         }
 
-        protected void btnLamMoi_Click(object sender, EventArgs e)
+        protected void btnSave_Click(object sender, EventArgs e)
         {
-            ClearFields();
-        }
+            string maTK = txtMaTK.Text.Trim();
+            string tenTK = txtTenTK.Text.Trim();
+            string matKhau = txtMatKhau.Text.Trim();
 
-        protected void btnXoaTaiKhoan_Click(object sender, EventArgs e)
-        {
-           
-        }
+            lblMessage.Text = ""; // Clear error message
 
-        protected void btnTimKiemTaiKhoan_Click(object sender, EventArgs e)
-        {
-            string keyword = txtTimKiemTaiKhoan.Text.Trim().ToLower();
-            List<TaiKhoanNV> taiKhoanList = (List<TaiKhoanNV>)Session["TaiKhoanList"];
+            if (string.IsNullOrEmpty(maTK))
+            {
+                lblMessage.Text = "Mã tài khoản không được để trống.";
+                return;
+            }
+            if (string.IsNullOrEmpty(tenTK))
+            {
+                lblMessage.Text = "Tên tài khoản không được để trống.";
+                return;
+            }
+            if (string.IsNullOrEmpty(matKhau))
+            {
+                lblMessage.Text = "Mật khẩu không được để trống.";
+                return;
+            }
 
-            List<TaiKhoanNV> resultList = taiKhoanList.FindAll(t =>
-                t.MaTaiKhoan.ToLower().Contains(keyword) ||
-                t.TaiKhoan.ToLower().Contains(keyword) ||
-                t.MaNhanVien.ToLower().Contains(keyword));
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                con.Open();
+                SqlCommand cmd;
 
-            gvDanhSachTaiKhoan.DataSource = resultList;
-            gvDanhSachTaiKhoan.DataBind();
-        }
+                if ((bool)ViewState["EditMode"])
+                {
+                    cmd = new SqlCommand("UPDATE tblTaiKhoan SET sTenTK=@sTenTK, sMatKhau=@sMatKhau WHERE sMaTK=@sMaTK", con);
+                }
+                else
+                {
+                    cmd = new SqlCommand("INSERT INTO tblTaiKhoan (sMaTK, sTenTK, sMatKhau) VALUES (@sMaTK, @sTenTK, @sMatKhau)", con);
+                }
 
-        private void BindGrid()
-        {
-            gvDanhSachTaiKhoan.DataSource = (List<TaiKhoanNV>)Session["TaiKhoanList"];
-            gvDanhSachTaiKhoan.DataBind();
-        }
+                cmd.Parameters.AddWithValue("@sMaTK", maTK);
+                cmd.Parameters.AddWithValue("@sTenTK", tenTK);
+                cmd.Parameters.AddWithValue("@sMatKhau", matKhau);
 
-        private void ClearFields()
-        {
-            txtMaTaiKhoan.Text = "";
-            txtTaiKhoan.Text = "";
+                cmd.ExecuteNonQuery();
+                con.Close();
+            }
+
+            // Reset form and reload data
+            txtMaTK.Text = "";
+            txtTenTK.Text = "";
             txtMatKhau.Text = "";
-            txtMaNhanVien.Text = "";
-            txtMaQuyen.Text = "";
+            ViewState["EditMode"] = false;
+            btnSave.Text = "Lưu";
+            btnSave.Attributes["data-editmode"] = "false";
+            LoadData();
         }
 
-        private bool validateInputs()
+        protected void btnCancel_Click(object sender, EventArgs e)
         {
-            // Implement your validation logic here (e.g., checking for empty fields)
-            // Example:
-            if (string.IsNullOrEmpty(txtMaTaiKhoan.Text))
-            {
-                Response.Write("<script>alert('Mã tài khoản không được để trống');</script>");
-                return false;
-            }
-            // Add more validation as per your requirements
-            return true;
+            // Reset form
+            txtMaTK.Text = "";
+            txtTenTK.Text = "";
+            txtMatKhau.Text = "";
+            ViewState["EditMode"] = false;
+            btnSave.Text = "Lưu";
+            btnSave.Attributes["data-editmode"] = "false";
+            lblMessage.Text = "";
         }
     }
 }

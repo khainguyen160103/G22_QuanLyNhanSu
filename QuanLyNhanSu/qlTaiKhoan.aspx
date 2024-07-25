@@ -1,89 +1,207 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="qlTaiKhoan.aspx.cs" Inherits="quanLyTaiKhoanNV.qlTaiKhoan" %>
 
 <!DOCTYPE html>
-
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title></title>
-    <link href="qlNhanVien.css" rel="stylesheet" />
-    <script src="qlNV.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý tài khoản</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        .action-buttons button {
+            padding: 5px 10px;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .action-buttons button:hover {
+            background-color: #0056b3;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        .form-actions button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .form-actions button.save {
+            background-color: #28a745;
+            color: #fff;
+        }
+        .form-actions button.save:hover {
+            background-color: #218838;
+        }
+        .form-actions button.cancel {
+            background-color: #dc3545;
+            color: #fff;
+        }
+        .form-actions button.cancel:hover {
+            background-color: #c82333;
+        }
+        .search-group {
+            margin-bottom: 20px;
+        }
+        .search-group input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+    <script type="text/javascript">
+        function confirmAction(message) {
+            return confirm(message);
+        }
+    </script>
 </head>
 <body>
-    <form id="form1" runat="server">
-       <div id="container">
-            <h1>Quản lý tài khoản nhân viên</h1>
-            <div class="add_change">
-                <div style="font-weight: bold">Thêm mới/Chỉnh sửa Tài khoản</div>
-                <div>
-                    <div>
-                        <div>Mã tài khoản</div>
-                        <asp:TextBox ID="txtMaTaiKhoan" runat="server"></asp:TextBox>
-                    </div>
-                    <div>
-                        <div>Tài khoản</div>
-                        <asp:TextBox ID="txtTaiKhoan" runat="server"></asp:TextBox>
-                    </div>
-                    <div>
-                        <div>Mật khẩu</div>
-                        <asp:TextBox ID="txtMatKhau" runat="server" TextMode ="Password"></asp:TextBox>
-                    </div>
-                    <div>
-                        <div>Tình trạng</div>
-                        <asp:DropDownList ID="ddlTinhTrang" runat="server">
-                            <asp:ListItem Value="hoatdong">Hoạt động</asp:ListItem>
-                            <asp:ListItem Value="khonghoatdong">Không hoạt động</asp:ListItem>
-                        </asp:DropDownList>
-                    </div>
-                    <div>
-                        <div>Mã nhân viên</div>
-                        <asp:TextBox ID="txtMaNhanVien" runat="server"></asp:TextBox>
-                    </div>
-                    <div>
-                        <div>Mã quyền</div>
-                        <asp:TextBox ID="txtMaQuyen" runat="server"></asp:TextBox>
-                    </div>
-                </div>
-                <div>
-                    <asp:Button ID="btnThemMoi" runat="server" Text="Thêm mới" OnClientClick="return validateInputs();" OnClick="btnThemMoi_Click" />
-                    <asp:Button ID="btnCapNhat" runat="server" Text="Cập nhật" OnClientClick="return validateInputs();" OnClick="btnCapNhat_Click" />
-                    <asp:Button ID="btnLamMoi" runat="server" Text="Làm mới" OnClick="btnLamMoi_Click" />
-                    <asp:Button ID="btnXoaTaiKhoan" runat="server" Text="Xóa" OnClick="btnXoaTaiKhoan_Click" />
-                </div>
+    <div class="container">
+        <h1>Quản lý tài khoản</h1>
+        <form id="form1" runat="server">
+            <div class="search-group">
+                <asp:Label ID="lblSearch" runat="server" Text="Tìm kiếm theo Mã tài khoản:" />
+                <asp:TextBox ID="txtSearchMaTK" runat="server" CssClass="form-control" />
+                <asp:Button ID="btnSearch" runat="server" Text="Tìm kiếm" OnClick="btnSearch_Click" />
             </div>
-            <div class="dsTaikhoan">
-                <div style="font-weight: bold; margin-left:100px">Danh sách tài khoản</div>
-                <div style ="margin-left : 100px">
-                    <asp:TextBox ID="txtTimKiemTaiKhoan" runat="server" Placeholder="Tìm kiếm tài khoản"></asp:TextBox>
-                    <asp:Button ID="btnTimKiemTaiKhoan" runat="server" Text="Tìm kiếm" OnClick="btnTimKiemTaiKhoan_Click" />
-                </div>
-                <asp:GridView ID="gvDanhSachTaiKhoan" runat="server" AutoGenerateColumns="False">
-                    <Columns>
-                        <asp:BoundField DataField="MaTaiKhoan" HeaderText="Mã tài khoản" />
-                        <asp:BoundField DataField="TaiKhoan" HeaderText="Tài khoản" />
-                        <asp:BoundField DataField="TinhTrang" HeaderText="Tình trạng" />
-                        <asp:BoundField DataField="MaNhanVien" HeaderText="Mã nhân viên" />
-                        <asp:BoundField DataField="MaQuyen" HeaderText="Mã quyền" />
-                    </Columns>
-                </asp:GridView>
-            </div>
-        </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mã tài khoản</th>
+                        <th>Tên tài khoản</th>
+                        <th>Mật khẩu</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <asp:Repeater ID="Repeater1" runat="server">
+                        <ItemTemplate>
+                            <tr>
+                                <td><%# Eval("sMaTK") %></td>
+                                <td><%# Eval("sTenTK") %></td>
+                                <td><%# Eval("sMatKhau") %></td>
+                                <td class="action-buttons">
+                                    <asp:Button ID="EditButton" runat="server" Text="Sửa" CommandName="Edit" CommandArgument='<%# Eval("sMaTK") %>' OnClick="EditButton_Click"  />
+                                    <asp:Button ID="DeleteButton" runat="server" Text="Xóa" CommandName="Delete" CommandArgument='<%# Eval("sMaTK") %>' OnClick="DeleteButton_Click" OnClientClick="return confirmAction('Bạn có chắc chắn muốn xóa thông tin này?');" />
+                                </td>
+                            </tr>
+                        </ItemTemplate>
+                    </asp:Repeater>
+                </tbody>
+            </table>
 
-        <script>
-        function validateInputs() {
-        var maTaiKhoan = document.getElementById('<%= txtMaTaiKhoan.ClientID %>').value.trim();
-        var taiKhoan = document.getElementById('<%= txtTaiKhoan.ClientID %>').value.trim();
+            <h3>Thêm/Sửa Tài Khoản</h3>
+            <asp:Label ID="lblMessage" runat="server" ForeColor="Red" />
+            <div class="form-group">
+                <asp:Label ID="lblMaTK" runat="server" Text="Mã tài khoản:" AssociatedControlID="txtMaTK" />
+                <asp:TextBox ID="txtMaTK" runat="server" CssClass="form-control" />
+            </div>
+            <div class="form-group">
+                <asp:Label ID="lblTenTK" runat="server" Text="Tên tài khoản:" AssociatedControlID="txtTenTK" />
+                <asp:TextBox ID="txtTenTK" runat="server" CssClass="form-control" />
+            </div>
+            <div class="form-group">
+                <asp:Label ID="lblMatKhau" runat="server" Text="Mật khẩu:" AssociatedControlID="txtMatKhau" />
+                <asp:TextBox ID="txtMatKhau" runat="server" CssClass="form-control" TextMode="Password" />
+            </div>
+            <div class="form-actions">
+                <asp:Button ID="btnSave" runat="server" Text="Lưu" CssClass="save" OnClick="btnSave_Click" OnClientClick="return confirmSave();" />
+                <asp:Button ID="btnCancel" runat="server" Text="Hủy" CssClass="cancel" OnClick="btnCancel_Click" />
+            </div>
+        </form>
+    </div>
+</body>
+    <script type="text/javascript">
+        function confirmAction(message) {
+            return confirm(message);
+        }
+
+        function validateForm() {
+            var maTK = document.getElementById('<%= txtMaTK.ClientID %>').value.trim();
+        var tenTK = document.getElementById('<%= txtTenTK.ClientID %>').value.trim();
         var matKhau = document.getElementById('<%= txtMatKhau.ClientID %>').value.trim();
-        var maNhanVien = document.getElementById('<%= txtMaNhanVien.ClientID %>').value.trim();
-        var maQuyen = document.getElementById('<%= txtMaQuyen.ClientID %>').value.trim();
 
-        if (maTaiKhoan === '' || taiKhoan === '' || matKhau === '' || maNhanVien === '' || maQuyen === '') {
-            alert('Vui lòng nhập đầy đủ thông tin.');
+        if (maTK === '') {
+            alert('Mã tài khoản không được để trống.');
             return false;
         }
+        if (tenTK === '') {
+            alert('Tên tài khoản không được để trống.');
+            return false;
+        }
+        if (matKhau === '') {
+            alert('Mật khẩu không được để trống.');
+            return false;
+        }
+
         return true;
     }
-        </script>
 
-    </form>
-</body>
+    function confirmSave() {
+        if (!validateForm()) {
+            return false;
+        }
+        var action = document.getElementById('<%= btnSave.ClientID %>').getAttribute('data-editmode') === 'true' ? 'sửa' : 'thêm mới';
+            return confirm('Bạn có chắc chắn muốn ' + action + ' thông tin này?');
+        }
+</script>
 </html>
