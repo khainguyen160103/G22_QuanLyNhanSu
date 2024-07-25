@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -87,12 +88,23 @@ namespace QuanLyNhanSu.QuanLyChucVu
             {
                 Response.Write("<script>alert('Mã chức vụ đã tồn tại');</script>");
                 return;
+            }
+            if (!checknull())
+            {
+                Response.Write("<script>alert('Các mục thông tin không được để trống');</script>");
+                return;
+            }
+            if(!checkLuong())
+            {
+                Response.Write("<script>alert('Lương phải là số và lớn hơn 0');</script>");
+                return;
             }    
-           if(ThemBanDoc())
+            if (ThemBanDoc() && checknull() && checkLuong())
             {
                 Response.Write("<script>alert('Thêm thành công');</script>");
                 BindGrid();
             }
+           
             else
             {
                 Response.Write("<script>alert('Thêm không thành công');</script>");
@@ -116,7 +128,7 @@ namespace QuanLyNhanSu.QuanLyChucVu
                         cmd.Parameters.Add("@sMaChucVu", SqlDbType.VarChar, 10).Value =txtMaChucVu.Text.ToString().Trim();
                         //cmd.Parameters.AddWithValue("@masv", maSV);
                         cmd.Parameters.AddWithValue("@sTenChucVu", txtTenChucVu.Text.ToString().Trim());
-                        cmd.Parameters.AddWithValue("@fHeSoLuong", float.Parse(floatHSL.Text.ToString().Trim()));
+                        cmd.Parameters.AddWithValue("@fHeSoLuong", Math.Round (float.Parse(floatHSL.Text.ToString().Trim()) ,1));
                         conn.Open();
                         check = cmd.ExecuteNonQuery();
                         conn.Close();
@@ -141,7 +153,7 @@ namespace QuanLyNhanSu.QuanLyChucVu
                     cmd.Parameters.Add("@sMaChucVu", SqlDbType.VarChar, 10).Value = txtMaChucVu.Text.ToString().Trim();
                     //cmd.Parameters.AddWithValue("@masv", maSV);
                     cmd.Parameters.AddWithValue("@sTenChucVu", txtTenChucVu.Text.ToString().Trim());
-                    cmd.Parameters.AddWithValue("@fHeSoLuong", float.Parse(floatHSL.Text.ToString().Trim()));
+                    cmd.Parameters.AddWithValue("@fHeSoLuong", Math.Round(float.Parse(floatHSL.Text.ToString().Trim()), 1));
                     conn.Open();
                     check = cmd.ExecuteNonQuery();
                     conn.Close();
@@ -267,7 +279,18 @@ namespace QuanLyNhanSu.QuanLyChucVu
         {
             txtMaChucVu.Text = null;
             txtTenChucVu.Text = null;
-            floatHSL = null;
+            floatHSL.Text = null;
+        }
+        private bool checknull()
+        {
+            if (txtMaChucVu.Text == null || txtTenChucVu.Text == null || floatHSL.Text == null) return false;
+            return true;
+        }
+        private bool checkLuong()
+        {
+            float a = 0;
+            if (float.Parse(floatHSL.Text.ToString()) < 0 || !float.TryParse(floatHSL.Text.ToString(), out a)) return false;
+            return true;
         }
     }
 }
