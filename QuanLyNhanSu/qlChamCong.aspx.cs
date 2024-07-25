@@ -54,8 +54,8 @@ namespace QuanLyNhanSu
                     txtTenNV.Text = dr["sTenNV"].ToString();
                     txtNgayChamCong.Text = ((DateTime)dr["dNgayChamCong"]).ToString("yyyy-MM-dd");
                     ddlDiLam.SelectedValue = dr["bDiLam"].ToString();
-                    txtMaNV.ReadOnly = true; // Không cho sửa mã NV
-                    txtNgayChamCong.ReadOnly = true; // Không cho sửa ngày chấm công
+                    txtMaNV.ReadOnly = false; // Không cho sửa mã NV
+                    txtNgayChamCong.ReadOnly = false; // Không cho sửa ngày chấm công
                 }
                 con.Close();
             }
