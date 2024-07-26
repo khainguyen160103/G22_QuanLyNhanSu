@@ -1,23 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace quanLyTaiKhoanNV
 {
-    public class TaiKhoanNV
-    {
-        public string MaTaiKhoan { get; set; }
-        public string TaiKhoan { get; set; }
-        public string MatKhau { get; set; }
-        public string TinhTrang { get; set; }
-        public string MaNhanVien { get; set; }
-        public string MaQuyen { get; set; }
-        public string HoatDong { get; set; }
-    }
-
     public partial class qlTaiKhoan : System.Web.UI.Page
     {
         private string connectionString = ConfigurationManager.ConnectionStrings["QuanLyLuongNVConnectionString"].ConnectionString;
@@ -25,154 +15,169 @@ namespace quanLyTaiKhoanNV
         {
             if (!IsPostBack)
             {
-                LoadData();
-                ViewState["EditMode"] = false;
+                LoadAccounts();
+                btnSave.Attributes["data-editmode"] = "false"; // Mặc định chế độ thêm mới
             }
         }
 
-        protected void btnSearch_Click(object sender, EventArgs e)
+        private void LoadAccounts()
         {
-            LoadData(txtSearchMaTK.Text.Trim());
-        }
-
-        private void LoadData(string searchMaTK = "")
-        {
-            using (SqlConnection con = new SqlConnection(connectionString))
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                con.Open();
-                SqlCommand cmd;
-                if (string.IsNullOrEmpty(searchMaTK))
-                {
-                    cmd = new SqlCommand("SELECT * FROM tblTaiKhoan", con);
-                }
-                else
-                {
-                    cmd = new SqlCommand("SELECT * FROM tblTaiKhoan WHERE sMaTK LIKE @searchMaTK", con);
-                    cmd.Parameters.AddWithValue("@searchMaTK", "%" + searchMaTK + "%");
-                }
+                string query = "SELECT PK_sMaTK, FK_sMaNV, sTaiKhoan, sMatKhau, sTinhTrang, FK_sMaquyen FROM tbl_TAIKHOAN";
+                SqlDataAdapter da = new SqlDataAdapter(query, conn);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
 
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                Repeater1.DataSource = reader;
+                Repeater1.DataSource = dt;
                 Repeater1.DataBind();
-
-                reader.Close();
-                con.Close();
             }
-
-            lblMessage.Text = ""; // Clear error message after loading data
         }
 
         protected void EditButton_Click(object sender, EventArgs e)
         {
-            string maTK = ((Button)sender).CommandArgument;
+            Button btnEdit = (Button)sender;
+            string maTaiKhoan = btnEdit.CommandArgument;
 
-            using (SqlConnection con = new SqlConnection(connectionString))
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                con.Open();
-                SqlCommand cmd = new SqlCommand("SELECT * FROM tblTaiKhoan WHERE sMaTK=@sMaTK", con);
-                cmd.Parameters.AddWithValue("@sMaTK", maTK);
+                string query = "SELECT PK_sMaTK, FK_sMaNV, sTaiKhoan, sMatKhau, sTinhTrang, FK_sMaquyen FROM tbl_TAIKHOAN WHERE PK_sMaTK = @MaTaiKhoan";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@MaTaiKhoan", maTaiKhoan);
+                conn.Open();
                 SqlDataReader reader = cmd.ExecuteReader();
-
                 if (reader.Read())
                 {
-                    txtMaTK.Text = reader["sMaTK"].ToString();
-                    txtTenTK.Text = reader["sTenTK"].ToString();
+                    txtMaTK.Text = reader["PK_sMaTK"].ToString();
+                    txtMaNV.Text = reader["FK_sMaNV"].ToString();
+                    txtTaiKhoan.Text = reader["sTaiKhoan"].ToString();
                     txtMatKhau.Text = reader["sMatKhau"].ToString();
-
+                    txtTinhTrang.Text = reader["sTinhTrang"].ToString();
+                    txtMaQuyen.Text = reader["FK_sMaquyen"].ToString();
                     ViewState["EditMode"] = true;
-                    btnSave.Text = "Sửa";
-                    btnSave.Attributes["data-editmode"] = "true";
+                    btnSave.Attributes["data-editmode"] = "true"; // Chế độ sửa
                 }
-
-                reader.Close();
-                con.Close();
             }
         }
 
         protected void DeleteButton_Click(object sender, EventArgs e)
         {
-            string maTK = ((Button)sender).CommandArgument;
+            Button btnDelete = (Button)sender;
+            string maTaiKhoan = btnDelete.CommandArgument;
 
-            using (SqlConnection con = new SqlConnection(connectionString))
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                con.Open();
-                SqlCommand cmd = new SqlCommand("DELETE FROM tblTaiKhoan WHERE sMaTK=@sMaTK", con);
-                cmd.Parameters.AddWithValue("@sMaTK", maTK);
-
+                string query = "DELETE FROM tbl_TAIKHOAN WHERE PK_sMaTK = @MaTaiKhoan";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@MaTaiKhoan", maTaiKhoan);
+                conn.Open();
                 cmd.ExecuteNonQuery();
-                con.Close();
             }
 
-            LoadData();
+            LoadAccounts();
         }
 
         protected void btnSave_Click(object sender, EventArgs e)
         {
-            string maTK = txtMaTK.Text.Trim();
-            string tenTK = txtTenTK.Text.Trim();
-            string matKhau = txtMatKhau.Text.Trim();
-
-            lblMessage.Text = ""; // Clear error message
-
-            if (string.IsNullOrEmpty(maTK))
+            if (string.IsNullOrWhiteSpace(txtMaTK.Text) ||
+                string.IsNullOrWhiteSpace(txtMaNV.Text) ||
+                string.IsNullOrWhiteSpace(txtTaiKhoan.Text) ||
+                string.IsNullOrWhiteSpace(txtMatKhau.Text) ||
+                string.IsNullOrWhiteSpace(txtTinhTrang.Text) ||
+                string.IsNullOrWhiteSpace(txtMaQuyen.Text))
             {
-                lblMessage.Text = "Mã tài khoản không được để trống.";
-                return;
-            }
-            if (string.IsNullOrEmpty(tenTK))
-            {
-                lblMessage.Text = "Tên tài khoản không được để trống.";
-                return;
-            }
-            if (string.IsNullOrEmpty(matKhau))
-            {
-                lblMessage.Text = "Mật khẩu không được để trống.";
+                lblMessage.Text = "Vui lòng điền đầy đủ thông tin.";
                 return;
             }
 
-            using (SqlConnection con = new SqlConnection(connectionString))
+            if (ViewState["EditMode"] != null && (bool)ViewState["EditMode"])
             {
-                con.Open();
-                SqlCommand cmd;
+                UpdateAccount(txtMaTK.Text, txtMaNV.Text, txtTaiKhoan.Text, txtMatKhau.Text, txtTinhTrang.Text, txtMaQuyen.Text);
+            }
+            else
+            {
+                AddAccount(txtMaTK.Text, txtMaNV.Text, txtTaiKhoan.Text, txtMatKhau.Text, txtTinhTrang.Text, txtMaQuyen.Text);
+            }
 
-                if ((bool)ViewState["EditMode"])
-                {
-                    cmd = new SqlCommand("UPDATE tblTaiKhoan SET sTenTK=@sTenTK, sMatKhau=@sMatKhau WHERE sMaTK=@sMaTK", con);
-                }
-                else
-                {
-                    cmd = new SqlCommand("INSERT INTO tblTaiKhoan (sMaTK, sTenTK, sMatKhau) VALUES (@sMaTK, @sTenTK, @sMatKhau)", con);
-                }
+            lblMessage.Text = "Thông tin đã được lưu.";
+            ClearForm();
+            LoadAccounts();
+        }
 
-                cmd.Parameters.AddWithValue("@sMaTK", maTK);
-                cmd.Parameters.AddWithValue("@sTenTK", tenTK);
-                cmd.Parameters.AddWithValue("@sMatKhau", matKhau);
-
+        private void AddAccount(string maTK, string maNV, string taiKhoan, string matKhau, string tinhTrang, string maQuyen)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = "INSERT INTO tbl_TAIKHOAN (PK_sMaTK, FK_sMaNV, sTaiKhoan, sMatKhau, sTinhTrang, FK_sMaquyen) VALUES (@MaTK, @MaNV, @TaiKhoan, @MatKhau, @TinhTrang, @MaQuyen)";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@MaTK", maTK);
+                cmd.Parameters.AddWithValue("@MaNV", maNV);
+                cmd.Parameters.AddWithValue("@TaiKhoan", taiKhoan);
+                cmd.Parameters.AddWithValue("@MatKhau", matKhau);
+                cmd.Parameters.AddWithValue("@TinhTrang", tinhTrang);
+                cmd.Parameters.AddWithValue("@MaQuyen", maQuyen);
+                conn.Open();
                 cmd.ExecuteNonQuery();
-                con.Close();
             }
+        }
 
-            // Reset form and reload data
-            txtMaTK.Text = "";
-            txtTenTK.Text = "";
-            txtMatKhau.Text = "";
-            ViewState["EditMode"] = false;
-            btnSave.Text = "Lưu";
-            btnSave.Attributes["data-editmode"] = "false";
-            LoadData();
+        private void UpdateAccount(string maTK, string maNV, string taiKhoan, string matKhau, string tinhTrang, string maQuyen)
+        {
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = "UPDATE tbl_TAIKHOAN SET FK_sMaNV = @MaNV, sTaiKhoan = @TaiKhoan, sMatKhau = @MatKhau, sTinhTrang = @TinhTrang, FK_sMaquyen = @MaQuyen WHERE PK_sMaTK = @MaTK";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@MaTK", maTK);
+                cmd.Parameters.AddWithValue("@MaNV", maNV);
+                cmd.Parameters.AddWithValue("@TaiKhoan", taiKhoan);
+                cmd.Parameters.AddWithValue("@MatKhau", matKhau);
+                cmd.Parameters.AddWithValue("@TinhTrang", tinhTrang);
+                cmd.Parameters.AddWithValue("@MaQuyen", maQuyen);
+                conn.Open();
+                cmd.ExecuteNonQuery();
+            }
         }
 
         protected void btnCancel_Click(object sender, EventArgs e)
         {
-            // Reset form
-            txtMaTK.Text = "";
-            txtTenTK.Text = "";
-            txtMatKhau.Text = "";
-            ViewState["EditMode"] = false;
-            btnSave.Text = "Lưu";
-            btnSave.Attributes["data-editmode"] = "false";
-            lblMessage.Text = "";
+            ClearForm();
+        }
+
+        private void ClearForm()
+        {
+            txtMaTK.Text = string.Empty;
+            txtMaNV.Text = string.Empty;
+            txtTaiKhoan.Text = string.Empty;
+            txtMatKhau.Text = string.Empty;
+            txtTinhTrang.Text = string.Empty;
+            txtMaQuyen.Text = string.Empty;
+            ViewState["EditMode"] = null;
+            btnSave.Attributes["data-editmode"] = "false"; // Quay lại chế độ thêm mới
+        }
+
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            string searchMaTK = txtSearchMaTK.Text.Trim();
+
+            if (!string.IsNullOrWhiteSpace(searchMaTK))
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    string query = "SELECT PK_sMaTK, FK_sMaNV, sTaiKhoan, sMatKhau, sTinhTrang, FK_sMaquyen FROM tbl_TAIKHOAN WHERE PK_sMaTK = @MaTK";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@MaTK", searchMaTK);
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+
+                    Repeater1.DataSource = dt;
+                    Repeater1.DataBind();
+                }
+            }
+            else
+            {
+                LoadAccounts();
+            }
         }
     }
 }

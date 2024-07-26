@@ -79,6 +79,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="qlTaiKhoan.aspx.cs">
       <DependentUpon>qlTaiKhoan.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="qlTaiKhoan.aspx.designer.cs">
       <DependentUpon>qlTaiKhoan.aspx</DependentUpon>

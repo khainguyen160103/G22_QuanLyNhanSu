@@ -1,5 +1,4 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="qlTaiKhoan.aspx.cs" Inherits="quanLyTaiKhoanNV.qlTaiKhoan" %>
-
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
@@ -67,7 +66,7 @@
             margin-bottom: 5px;
             font-weight: bold;
         }
-        .form-group input {
+        .form-group input, .form-group select {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
@@ -112,6 +111,50 @@
         function confirmAction(message) {
             return confirm(message);
         }
+
+        function validateForm() {
+            var maTK = document.getElementById('<%= txtMaTK.ClientID %>').value.trim();
+            var maNV = document.getElementById('<%= txtMaNV.ClientID %>').value.trim();
+            var taiKhoan = document.getElementById('<%= txtTaiKhoan.ClientID %>').value.trim();
+            var matKhau = document.getElementById('<%= txtMatKhau.ClientID %>').value.trim();
+            var tinhTrang = document.getElementById('<%= txtTinhTrang.ClientID %>').value.trim();
+            var maQuyen = document.getElementById('<%= txtMaQuyen.ClientID %>').value.trim();
+
+            if (maTK === '') {
+                alert('Mã tài khoản không được để trống.');
+                return false;
+            }
+            if (maNV === '') {
+                alert('Mã nhân viên không được để trống.');
+                return false;
+            }
+            if (taiKhoan === '') {
+                alert('Tên tài khoản không được để trống.');
+                return false;
+            }
+            if (matKhau === '') {
+                alert('Mật khẩu không được để trống.');
+                return false;
+            }
+            if (tinhTrang === '') {
+                alert('Tình trạng không được để trống.');
+                return false;
+            }
+            if (maQuyen === '') {
+                alert('Mã quyền không được để trống.');
+                return false;
+            }
+
+            return true;
+        }
+
+        function confirmSave() {
+            if (!validateForm()) {
+                return false;
+            }
+            var action = document.getElementById('<%= btnSave.ClientID %>').getAttribute('data-editmode') === 'true' ? 'sửa' : 'thêm mới';
+            return confirm('Bạn có chắc chắn muốn ' + action + ' thông tin này?');
+        }
     </script>
 </head>
 <body>
@@ -127,8 +170,11 @@
                 <thead>
                     <tr>
                         <th>Mã tài khoản</th>
-                        <th>Tên tài khoản</th>
+                        <th>Mã nhân viên</th>
+                        <th>Tài khoản</th>
                         <th>Mật khẩu</th>
+                        <th>Tình trạng</th>
+                        <th>Mã quyền</th>
                         <th>Hành động</th>
                     </tr>
                 </thead>
@@ -136,12 +182,15 @@
                     <asp:Repeater ID="Repeater1" runat="server">
                         <ItemTemplate>
                             <tr>
-                                <td><%# Eval("sMaTK") %></td>
-                                <td><%# Eval("sTenTK") %></td>
+                                <td><%# Eval("PK_sMaTK") %></td>
+                                <td><%# Eval("FK_sMaNV") %></td>
+                                <td><%# Eval("sTaiKhoan") %></td>
                                 <td><%# Eval("sMatKhau") %></td>
+                                <td><%# Eval("sTinhTrang") %></td>
+                                <td><%# Eval("FK_sMaquyen") %></td>
                                 <td class="action-buttons">
-                                    <asp:Button ID="EditButton" runat="server" Text="Sửa" CommandName="Edit" CommandArgument='<%# Eval("sMaTK") %>' OnClick="EditButton_Click"  />
-                                    <asp:Button ID="DeleteButton" runat="server" Text="Xóa" CommandName="Delete" CommandArgument='<%# Eval("sMaTK") %>' OnClick="DeleteButton_Click" OnClientClick="return confirmAction('Bạn có chắc chắn muốn xóa thông tin này?');" />
+                                    <asp:Button ID="EditButton" runat="server" Text="Sửa" CommandName="Edit" CommandArgument='<%# Eval("PK_sMaTK") %>' OnClick="EditButton_Click"  />
+                                    <asp:Button ID="DeleteButton" runat="server" Text="Xóa" CommandName="Delete" CommandArgument='<%# Eval("PK_sMaTK") %>' OnClick="DeleteButton_Click" OnClientClick="return confirmAction('Bạn có chắc chắn muốn xóa thông tin này?');" />
                                 </td>
                             </tr>
                         </ItemTemplate>
@@ -156,52 +205,30 @@
                 <asp:TextBox ID="txtMaTK" runat="server" CssClass="form-control" />
             </div>
             <div class="form-group">
-                <asp:Label ID="lblTenTK" runat="server" Text="Tên tài khoản:" AssociatedControlID="txtTenTK" />
-                <asp:TextBox ID="txtTenTK" runat="server" CssClass="form-control" />
+                <asp:Label ID="lblMaNV" runat="server" Text="Mã nhân viên:" AssociatedControlID="txtMaNV" />
+                <asp:TextBox ID="txtMaNV" runat="server" CssClass="form-control" />
+            </div>
+            <div class="form-group">
+                <asp:Label ID="lblTaiKhoan" runat="server" Text="Tài khoản:" AssociatedControlID="txtTaiKhoan" />
+                <asp:TextBox ID="txtTaiKhoan" runat="server" CssClass="form-control" />
             </div>
             <div class="form-group">
                 <asp:Label ID="lblMatKhau" runat="server" Text="Mật khẩu:" AssociatedControlID="txtMatKhau" />
                 <asp:TextBox ID="txtMatKhau" runat="server" CssClass="form-control" TextMode="Password" />
             </div>
+            <div class="form-group">
+                <asp:Label ID="lblTinhTrang" runat="server" Text="Tình trạng:" AssociatedControlID="txtTinhTrang" />
+                <asp:TextBox ID="txtTinhTrang" runat="server" CssClass="form-control" />
+            </div>
+            <div class="form-group">
+                <asp:Label ID="lblMaQuyen" runat="server" Text="Mã quyền:" AssociatedControlID="txtMaQuyen" />
+                <asp:TextBox ID="txtMaQuyen" runat="server" CssClass="form-control" />
+            </div>
             <div class="form-actions">
                 <asp:Button ID="btnSave" runat="server" Text="Lưu" CssClass="save" OnClick="btnSave_Click" OnClientClick="return confirmSave();" />
-                <asp:Button ID="btnCancel" runat="server" Text="Hủy" CssClass="cancel" OnClick="btnCancel_Click" />
+                <asp:Button ID="btnCancel" runat="server" Text="Hủy bỏ" CssClass="cancel" OnClick="btnCancel_Click" />
             </div>
         </form>
     </div>
 </body>
-    <script type="text/javascript">
-        function confirmAction(message) {
-            return confirm(message);
-        }
-
-        function validateForm() {
-            var maTK = document.getElementById('<%= txtMaTK.ClientID %>').value.trim();
-        var tenTK = document.getElementById('<%= txtTenTK.ClientID %>').value.trim();
-        var matKhau = document.getElementById('<%= txtMatKhau.ClientID %>').value.trim();
-
-        if (maTK === '') {
-            alert('Mã tài khoản không được để trống.');
-            return false;
-        }
-        if (tenTK === '') {
-            alert('Tên tài khoản không được để trống.');
-            return false;
-        }
-        if (matKhau === '') {
-            alert('Mật khẩu không được để trống.');
-            return false;
-        }
-
-        return true;
-    }
-
-    function confirmSave() {
-        if (!validateForm()) {
-            return false;
-        }
-        var action = document.getElementById('<%= btnSave.ClientID %>').getAttribute('data-editmode') === 'true' ? 'sửa' : 'thêm mới';
-            return confirm('Bạn có chắc chắn muốn ' + action + ' thông tin này?');
-        }
-</script>
 </html>

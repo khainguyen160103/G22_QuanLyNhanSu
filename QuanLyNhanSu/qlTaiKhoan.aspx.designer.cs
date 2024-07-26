@@ -87,22 +87,40 @@ namespace quanLyTaiKhoanNV
         protected global::System.Web.UI.WebControls.TextBox txtMaTK;
 
         /// <summary>
-        /// lblTenTK control.
+        /// lblMaNV control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTenTK;
+        protected global::System.Web.UI.WebControls.Label lblMaNV;
 
         /// <summary>
-        /// txtTenTK control.
+        /// txtMaNV control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtTenTK;
+        protected global::System.Web.UI.WebControls.TextBox txtMaNV;
+
+        /// <summary>
+        /// lblTaiKhoan control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTaiKhoan;
+
+        /// <summary>
+        /// txtTaiKhoan control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtTaiKhoan;
 
         /// <summary>
         /// lblMatKhau control.
@@ -121,6 +139,42 @@ namespace quanLyTaiKhoanNV
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtMatKhau;
+
+        /// <summary>
+        /// lblTinhTrang control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblTinhTrang;
+
+        /// <summary>
+        /// txtTinhTrang control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtTinhTrang;
+
+        /// <summary>
+        /// lblMaQuyen control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMaQuyen;
+
+        /// <summary>
+        /// txtMaQuyen control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtMaQuyen;
 
         /// <summary>
         /// btnSave control.
