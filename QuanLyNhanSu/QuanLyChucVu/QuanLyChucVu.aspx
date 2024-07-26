@@ -5,6 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title></title>
+    <link href="QuanLyChucVu.css" rel="stylesheet" />
 </head>
 <body>
     <form id="form1" runat="server">
@@ -33,9 +34,9 @@
                     <asp:Button ID="btnXoaTaiKhoan" runat="server" Text="Xóa" OnClick="btnXoaTaiKhoan_Click" />
                 </div>
             </div>
-        </div>
+        
 
-        <div>
+        <div class="DanhSachChucVu">
             <table style ="width: 800px ;margin:auto;">
                 <tr>
                     <td>
@@ -53,7 +54,7 @@
             </table>
            
         </div>
-        
+        </div>
     </form>
 </body>
 </html>

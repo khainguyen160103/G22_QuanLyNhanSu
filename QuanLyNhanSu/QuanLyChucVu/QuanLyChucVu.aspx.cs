@@ -283,7 +283,7 @@ namespace QuanLyNhanSu.QuanLyChucVu
         }
         private bool checknull()
         {
-            if (txtMaChucVu.Text == null || txtTenChucVu.Text == null || floatHSL.Text == null) return false;
+            if (txtMaChucVu.Text == "" || txtTenChucVu.Text == "" || floatHSL.Text == "") return false;
             return true;
         }
         private bool checkLuong()
