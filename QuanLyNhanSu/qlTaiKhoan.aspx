@@ -227,6 +227,7 @@
             <div class="form-actions">
                 <asp:Button ID="btnSave" runat="server" Text="Lưu" CssClass="save" OnClick="btnSave_Click" OnClientClick="return confirmSave();" />
                 <asp:Button ID="btnCancel" runat="server" Text="Hủy bỏ" CssClass="cancel" OnClick="btnCancel_Click" />
+                <asp:Button ID="btnRefresh" runat="server" Text="Làm mới" OnClick="btnRefresh_Click" CssClass="btn btn-primary" />
             </div>
         </form>
     </div>

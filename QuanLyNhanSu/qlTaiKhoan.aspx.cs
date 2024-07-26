@@ -48,17 +48,22 @@ namespace quanLyTaiKhoanNV
                 SqlDataReader reader = cmd.ExecuteReader();
                 if (reader.Read())
                 {
+                    // Cập nhật các trường khác
                     txtMaTK.Text = reader["PK_sMaTK"].ToString();
                     txtMaNV.Text = reader["FK_sMaNV"].ToString();
                     txtTaiKhoan.Text = reader["sTaiKhoan"].ToString();
                     txtMatKhau.Text = reader["sMatKhau"].ToString();
                     txtTinhTrang.Text = reader["sTinhTrang"].ToString();
                     txtMaQuyen.Text = reader["FK_sMaquyen"].ToString();
+
+                    // Chế độ sửa
                     ViewState["EditMode"] = true;
                     btnSave.Attributes["data-editmode"] = "true"; // Chế độ sửa
+                    txtMaTK.ReadOnly = true; // Không cho sửa mã tài khoản
                 }
             }
         }
+
 
         protected void DeleteButton_Click(object sender, EventArgs e)
         {
@@ -80,13 +85,14 @@ namespace quanLyTaiKhoanNV
         protected void btnSave_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtMaTK.Text) ||
-                string.IsNullOrWhiteSpace(txtMaNV.Text) ||
-                string.IsNullOrWhiteSpace(txtTaiKhoan.Text) ||
-                string.IsNullOrWhiteSpace(txtMatKhau.Text) ||
-                string.IsNullOrWhiteSpace(txtTinhTrang.Text) ||
-                string.IsNullOrWhiteSpace(txtMaQuyen.Text))
+        string.IsNullOrWhiteSpace(txtMaNV.Text) ||
+        string.IsNullOrWhiteSpace(txtTaiKhoan.Text) ||
+        string.IsNullOrWhiteSpace(txtMatKhau.Text) ||
+        string.IsNullOrWhiteSpace(txtTinhTrang.Text) ||
+        string.IsNullOrWhiteSpace(txtMaQuyen.Text))
             {
                 lblMessage.Text = "Vui lòng điền đầy đủ thông tin.";
+                lblMessage.ForeColor = System.Drawing.Color.Red;
                 return;
             }
 
@@ -99,44 +105,122 @@ namespace quanLyTaiKhoanNV
                 AddAccount(txtMaTK.Text, txtMaNV.Text, txtTaiKhoan.Text, txtMatKhau.Text, txtTinhTrang.Text, txtMaQuyen.Text);
             }
 
-            lblMessage.Text = "Thông tin đã được lưu.";
             ClearForm();
             LoadAccounts();
         }
 
-        private void AddAccount(string maTK, string maNV, string taiKhoan, string matKhau, string tinhTrang, string maQuyen)
+        private bool IsValidAccount(string maTK, string maNV, string maQuyen)
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                string query = "INSERT INTO tbl_TAIKHOAN (PK_sMaTK, FK_sMaNV, sTaiKhoan, sMatKhau, sTinhTrang, FK_sMaquyen) VALUES (@MaTK, @MaNV, @TaiKhoan, @MatKhau, @TinhTrang, @MaQuyen)";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@MaTK", maTK);
-                cmd.Parameters.AddWithValue("@MaNV", maNV);
-                cmd.Parameters.AddWithValue("@TaiKhoan", taiKhoan);
-                cmd.Parameters.AddWithValue("@MatKhau", matKhau);
-                cmd.Parameters.AddWithValue("@TinhTrang", tinhTrang);
-                cmd.Parameters.AddWithValue("@MaQuyen", maQuyen);
                 conn.Open();
-                cmd.ExecuteNonQuery();
+
+                // Kiểm tra mã quyền tồn tại
+                string queryQuyen = "SELECT COUNT(*) FROM tbl_QUYEN WHERE PK_sMaQuyen = @MaQuyen";
+                SqlCommand cmdQuyen = new SqlCommand(queryQuyen, conn);
+                cmdQuyen.Parameters.AddWithValue("@MaQuyen", maQuyen);
+                int quyenCount = (int)cmdQuyen.ExecuteScalar();
+                if (quyenCount == 0)
+                {
+                    lblMessage.Text = "Mã quyền không tồn tại.";
+                    lblMessage.ForeColor = System.Drawing.Color.Red;
+                    return false;
+                }
+
+                // Kiểm tra mã nhân viên tồn tại
+                string queryNV = "SELECT COUNT(*) FROM tbl_NHANVIEN WHERE PK_sMaNV = @MaNV";
+                SqlCommand cmdNV = new SqlCommand(queryNV, conn);
+                cmdNV.Parameters.AddWithValue("@MaNV", maNV);
+                int nvCount = (int)cmdNV.ExecuteScalar();
+                if (nvCount == 0)
+                {
+                    lblMessage.Text = "Mã nhân viên không tồn tại.";
+                    lblMessage.ForeColor = System.Drawing.Color.Red;
+                    return false;
+                }
+
+                // Kiểm tra mã tài khoản đã tồn tại
+                string queryTK = "SELECT COUNT(*) FROM tbl_TAIKHOAN WHERE PK_sMaTK = @MaTK";
+                SqlCommand cmdTK = new SqlCommand(queryTK, conn);
+                cmdTK.Parameters.AddWithValue("@MaTK", maTK);
+                int tkCount = (int)cmdTK.ExecuteScalar();
+                if (tkCount > 0)
+                {
+                    lblMessage.Text = "Mã tài khoản đã tồn tại.";
+                    lblMessage.ForeColor = System.Drawing.Color.Red;
+                    return false;
+                }
+
+                return true;
+            }
+        }
+
+        private void AddAccount(string maTK, string maNV, string taiKhoan, string matKhau, string tinhTrang, string maQuyen)
+        {
+            try
+            {
+                if (!IsValidAccount(maTK, maNV, maQuyen))
+                {
+                    return; // Nếu không hợp lệ, không thực hiện thao tác thêm
+                }
+
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    string query = "INSERT INTO tbl_TAIKHOAN (PK_sMaTK, FK_sMaNV, sTaiKhoan, sMatKhau, sTinhTrang, FK_sMaquyen) VALUES (@MaTK, @MaNV, @TaiKhoan, @MatKhau, @TinhTrang, @MaQuyen)";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@MaTK", maTK);
+                    cmd.Parameters.AddWithValue("@MaNV", maNV);
+                    cmd.Parameters.AddWithValue("@TaiKhoan", taiKhoan);
+                    cmd.Parameters.AddWithValue("@MatKhau", matKhau);
+                    cmd.Parameters.AddWithValue("@TinhTrang", tinhTrang);
+                    cmd.Parameters.AddWithValue("@MaQuyen", maQuyen);
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+
+                lblMessage.Text = "Tài khoản đã được thêm thành công.";
+                lblMessage.ForeColor = System.Drawing.Color.Green;
+            }
+            catch (Exception ex)
+            {
+                lblMessage.Text = $"Thêm tài khoản thất bại: {ex.Message}";
+                lblMessage.ForeColor = System.Drawing.Color.Red;
             }
         }
 
         private void UpdateAccount(string maTK, string maNV, string taiKhoan, string matKhau, string tinhTrang, string maQuyen)
         {
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            try
             {
-                string query = "UPDATE tbl_TAIKHOAN SET FK_sMaNV = @MaNV, sTaiKhoan = @TaiKhoan, sMatKhau = @MatKhau, sTinhTrang = @TinhTrang, FK_sMaquyen = @MaQuyen WHERE PK_sMaTK = @MaTK";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@MaTK", maTK);
-                cmd.Parameters.AddWithValue("@MaNV", maNV);
-                cmd.Parameters.AddWithValue("@TaiKhoan", taiKhoan);
-                cmd.Parameters.AddWithValue("@MatKhau", matKhau);
-                cmd.Parameters.AddWithValue("@TinhTrang", tinhTrang);
-                cmd.Parameters.AddWithValue("@MaQuyen", maQuyen);
-                conn.Open();
-                cmd.ExecuteNonQuery();
+                if (!IsValidAccount(maTK, maNV, maQuyen))
+                {
+                    return; // Nếu không hợp lệ, không thực hiện thao tác cập nhật
+                }
+
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    string query = "UPDATE tbl_TAIKHOAN SET FK_sMaNV = @MaNV, sTaiKhoan = @TaiKhoan, sMatKhau = @MatKhau, sTinhTrang = @TinhTrang, FK_sMaquyen = @MaQuyen WHERE PK_sMaTK = @MaTK";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@MaTK", maTK);
+                    cmd.Parameters.AddWithValue("@MaNV", maNV);
+                    cmd.Parameters.AddWithValue("@TaiKhoan", taiKhoan);
+                    cmd.Parameters.AddWithValue("@MatKhau", matKhau);
+                    cmd.Parameters.AddWithValue("@TinhTrang", tinhTrang);
+                    cmd.Parameters.AddWithValue("@MaQuyen", maQuyen);
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                }
+
+                lblMessage.Text = "Tài khoản đã được cập nhật thành công.";
+                lblMessage.ForeColor = System.Drawing.Color.Green;
+            }
+            catch (Exception ex)
+            {
+                lblMessage.Text = $"Cập nhật tài khoản thất bại: {ex.Message}";
+                lblMessage.ForeColor = System.Drawing.Color.Red;
             }
         }
+
 
         protected void btnCancel_Click(object sender, EventArgs e)
         {
@@ -179,5 +263,13 @@ namespace quanLyTaiKhoanNV
                 LoadAccounts();
             }
         }
+
+        protected void btnRefresh_Click(object sender, EventArgs e)
+        {
+            LoadAccounts(); // Tải lại danh sách tài khoản
+            ClearForm();    // Xóa form
+            lblMessage.Text = string.Empty; // Xóa thông báo lỗi
+        }
     }
 }
+
