@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Web.UI;
@@ -9,244 +10,343 @@ namespace qlNV
 {
     public partial class qlNV : Page
     {
-        private string connectionString = "Your_Connection_String_Here"; // Cập nhật chuỗi kết nối của bạn
+        private string connectionString = ConfigurationManager.ConnectionStrings["QuanLyLuongNVConnectionString"].ConnectionString;
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Kiểm tra xem người dùng đã đăng nhập chưa
-            if (Session["User"] == null)
-            {
-                Response.Redirect("Login.aspx"); // Chuyển hướng đến trang đăng nhập
-            }
-
             if (!IsPostBack)
             {
-                // Tải dữ liệu bảng nếu cần
-                LoadNhanVien();
+                LoadEmployees();
             }
         }
 
-        /*protected void previewImage()
+        private void LoadEmployees()
         {
-            // Đảm bảo file đã được tải lên và có tên
-            if (imgNhanVien.HasFile)
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                string fileName = imgNhanVien.FileName;
-                string filePath = "~/Images/" + fileName; // Đường dẫn lưu ảnh
-                string fullPath = Server.MapPath(filePath);
+                try
+                {
+                    string query = @"
+                        SELECT 
+                            nv.PK_sMaNV,
+                            nv.sTenNV,
+                            nv.dNgaysinh,
+                            nv.sGioitinh,
+                            nv.sCCCD,
+                            nv.sDiachia,
+                            nv.sSDT,
+                            nv.sEmail,
+                            nv.dNgayvaolam,
+                            nv.fLuongcb,
+                            nv.sTinhtrang,
+                            cv.sTenCV,
+                            pb.sTenPB
+                        FROM 
+                            tbl_NHANVIEN nv
+                        JOIN 
+                            tbl_CHUCVU cv ON nv.FK_sMaCV = cv.PK_sMaCV
+                        JOIN 
+                            tbl_PHONGBAN pb ON nv.FK_sMaPB = pb.PK_sMaPB";
 
-                // Hiển thị ảnh xem trước
-                previewImg.ImageUrl = filePath;
-                previewImg.Style["display"] = "block";
+                    SqlDataAdapter adapter = new SqlDataAdapter(query, conn);
+                    DataTable dt = new DataTable();
+                    adapter.Fill(dt);
+
+                    rptEmployees.DataSource = dt;
+                    rptEmployees.DataBind();
+                }
+                catch (Exception ex)
+                {
+                    ShowMessage("Lỗi khi tải dữ liệu: " + ex.Message, true);
+                }
+            }
+        }
+        private void LoadEmployeeData(string searchKeyword = "")
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["QuanLyLuongNVConnectionString"].ConnectionString;
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string query = @"
+                    SELECT nv.PK_sMaNV, nv.sTenNV, nv.dNgaysinh, nv.sGioitinh, nv.sCCCD, nv.sDiachia, nv.sSDT, 
+                           nv.sEmail, nv.dNgayvaolam, nv.fLuongcb, nv.sTinhtrang, cv.sTenCV, pb.sTenPB
+                    FROM tbl_NHANVIEN nv
+                    JOIN tbl_CHUCVU cv ON nv.FK_sMaCV = cv.PK_sMaCV
+                    JOIN tbl_PHONGBAN pb ON nv.FK_sMaPB = pb.PK_sMaPB
+                    WHERE (@SearchKeyword = '' OR 
+                          nv.PK_sMaNV LIKE '%' + @SearchKeyword + '%' OR 
+                          nv.sTenNV LIKE '%' + @SearchKeyword + '%' OR 
+                          nv.dNgaysinh LIKE '%' + @SearchKeyword + '%' OR 
+                          nv.sGioitinh LIKE '%' + @SearchKeyword + '%' OR 
+                          nv.sCCCD LIKE '%' + @SearchKeyword + '%' OR 
+                          nv.sDiachia LIKE '%' + @SearchKeyword + '%' OR 
+                          nv.sSDT LIKE '%' + @SearchKeyword + '%' OR 
+                          nv.sEmail LIKE '%' + @SearchKeyword + '%' OR 
+                          nv.dNgayvaolam LIKE '%' + @SearchKeyword + '%' OR 
+                          nv.fLuongcb LIKE '%' + @SearchKeyword + '%' OR 
+                          nv.sTinhtrang LIKE '%' + @SearchKeyword + '%' OR 
+                          cv.sTenCV LIKE '%' + @SearchKeyword + '%' OR 
+                          pb.sTenPB LIKE '%' + @SearchKeyword + '%')
+                    ORDER BY nv.sTenNV";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@SearchKeyword", searchKeyword);
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+
+                rptEmployees.DataSource = dt;
+                rptEmployees.DataBind();
+            }
+        }
+
+        protected void txtSearch_TextChanged(object sender, EventArgs e)
+        {
+            LoadEmployeeData(txtSearch.Text.Trim());
+        }
+
+        protected void btnAddNew_Click(object sender, EventArgs e)
+        {
+            ShowPanel(true);
+            ClearFields();
+            hfEmployeeID.Value = string.Empty; // Xóa ID nhân viên khi thêm mới
+        }
+
+        protected void btnEdit_Click(object sender, EventArgs e)
+        {
+            Button btn = (Button)sender;
+            string employeeID = btn.CommandArgument;
+            hfEmployeeID.Value = employeeID;
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    string query = "SELECT * FROM tbl_NHANVIEN WHERE PK_sMaNV = @MaNV";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@MaNV", employeeID);
+                    conn.Open();
+
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        txtName.Text = reader["sTenNV"].ToString();
+                        txtBirthDate.Text = Convert.ToDateTime(reader["dNgaysinh"]).ToString("yyyy-MM-dd");
+                        ddlGender.SelectedValue = reader["sGioitinh"].ToString();
+                        txtIDCard.Text = reader["sCCCD"].ToString();
+                        txtAddress.Text = reader["sDiachia"].ToString();
+                        txtPhone.Text = reader["sSDT"].ToString();
+                        txtEmail.Text = reader["sEmail"].ToString();
+                        txtStartDate.Text = Convert.ToDateTime(reader["dNgayvaolam"]).ToString("yyyy-MM-dd");
+                        txtSalary.Text = reader["fLuongcb"].ToString();
+                        txtStatus.Text = reader["sTinhtrang"].ToString();
+                        txtPositionID.Text = reader["FK_sMaCV"].ToString();
+                        txtDepartmentID.Text = reader["FK_sMaPB"].ToString();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ShowMessage("Lỗi khi tải dữ liệu nhân viên: " + ex.Message, true);
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+
+            ShowPanel(true);
+        }
+
+        protected void btnDelete_Click(object sender, EventArgs e)
+        {
+            Button btn = (Button)sender;
+            string employeeID = btn.CommandArgument;
+
+            // Ensure the employee ID is valid and not empty
+            if (!string.IsNullOrEmpty(employeeID))
+            {
+                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["QuanLyLuongNVConnectionString"].ConnectionString))
+                {
+                    try
+                    {
+                        // SQL query to delete the employee record
+                        string query = "DELETE FROM tbl_NHANVIEN WHERE PK_sMaNV = @EmployeeID";
+                        SqlCommand cmd = new SqlCommand(query, conn);
+                        cmd.Parameters.AddWithValue("@EmployeeID", employeeID);
+
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+
+                        // Show success message
+                        ShowMessage("Nhân viên đã được xóa thành công.", false);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Show error message
+                        ShowMessage("Lỗi khi xóa nhân viên: " + ex.Message, true);
+                    }
+                    finally
+                    {
+                        conn.Close();
+                    }
+                }
+
+                // Reload the employee list
+                LoadEmployees();
+            }
+        }
+
+
+        protected void btnSave_Click(object sender, EventArgs e)
+        {
+            string employeeID = hfEmployeeID.Value;
+            string maNV = txtMaNV.Text.Trim();
+            string name = txtName.Text.Trim();
+            DateTime birthDate = DateTime.Parse(txtBirthDate.Text.Trim());
+            string gender = ddlGender.SelectedValue;
+            string idCard = txtIDCard.Text.Trim();
+            string address = txtAddress.Text.Trim();
+            string phone = txtPhone.Text.Trim();
+            string email = txtEmail.Text.Trim();
+            DateTime startDate = DateTime.Parse(txtStartDate.Text.Trim());
+            float salary = float.Parse(txtSalary.Text.Trim());
+            string status = txtStatus.Text.Trim();
+            string positionID = txtPositionID.Text.Trim();
+            string departmentID = txtDepartmentID.Text.Trim();
+
+            if (string.IsNullOrEmpty(employeeID))
+            {
+                AddEmployee(maNV ,name, birthDate, gender, idCard, address, phone, email, startDate, salary, status, positionID, departmentID);
             }
             else
             {
-                previewImg.Style["display"] = "none";
+                UpdateEmployee(employeeID, name, birthDate, gender, idCard, address, phone, email, startDate, salary, status, positionID, departmentID);
             }
-        }*/
 
-        protected void btnThem_Click(object sender, EventArgs e)
-        {
-            // Thêm nhân viên vào cơ sở dữ liệu
-            AddEmployee();
-            // Cập nhật GridView
-            LoadNhanVien();
+            LoadEmployees();
+            ShowPanel(false);
         }
 
-        protected void btnCapNhat_Click(object sender, EventArgs e)
-        {
-            // Cập nhật thông tin nhân viên
-            UpdateEmployee();
-            // Cập nhật GridView
-            LoadNhanVien();
-        }
-
-        protected void btnXoa_Click(object sender, EventArgs e)
-        {
-            // Xóa nhân viên
-            DeleteEmployee();
-            // Cập nhật GridView
-            LoadNhanVien();
-        }
-
-        protected void btnLamMoi_Click(object sender, EventArgs e)
-        {
-            // Xóa dữ liệu trên các ô nhập
-            ClearForm();
-        }
-
-        protected void btnTimKiem_Click(object sender, EventArgs e)
-        {
-            // Tìm kiếm nhân viên
-            SearchEmployee();
-        }
-
-        protected void gvNhanVien_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            // Lấy mã nhân viên được chọn từ GridView
-            GridViewRow row = gvNhanVien.SelectedRow;
-            string maNhanVien = row.Cells[0].Text; // Giả sử cột mã nhân viên ở vị trí 0
-            // Tải thông tin chi tiết của nhân viên
-            LoadEmployeeDetails(maNhanVien);
-        }
-
-        private void LoadNhanVien()
-        {
-            // Lấy dữ liệu nhân viên từ cơ sở dữ liệu và gán cho GridView
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                SqlDataAdapter da = new SqlDataAdapter("SELECT MaNhanVien, TenNhanVien, ChucVu, TinhTrang FROM NhanVien", conn);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-                gvNhanVien.DataSource = dt;
-                gvNhanVien.DataBind();
-            }
-        }
-
-        private void AddEmployee()
+        private void AddEmployee(string maNV, string name, DateTime birthDate, string gender, string idCard, string address, string phone, string email, DateTime startDate, float salary, string status, string positionID, string departmentID)
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                string query = "INSERT INTO NhanVien (MaNhanVien, TenNhanVien, GioiTinh, CCCD, NgayVaoLam, PhongBan, TinhTrang, DiaChi, SDT, Email, ChucVu, Luong, Anh) VALUES (@MaNhanVien, @TenNhanVien, @GioiTinh, @CCCD, @NgayVaoLam, @PhongBan, @TinhTrang, @DiaChi, @SDT, @Email, @ChucVu, @Luong, @Anh)";
-
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@MaNhanVien", txtMaNhanVien.Text);
-                cmd.Parameters.AddWithValue("@TenNhanVien", txtTenNhanVien.Text);
-                cmd.Parameters.AddWithValue("@GioiTinh", ddlGioiTinh.SelectedValue);
-                cmd.Parameters.AddWithValue("@CCCD", txtCCCD.Text);
-                cmd.Parameters.AddWithValue("@NgayVaoLam", DateTime.Parse(txtNgayVaoLam.Text));
-                cmd.Parameters.AddWithValue("@PhongBan", txtPhongBan.Text);
-                cmd.Parameters.AddWithValue("@TinhTrang", ddlTinhTrang.SelectedValue);
-                cmd.Parameters.AddWithValue("@DiaChi", txtDiaChi.Text);
-                cmd.Parameters.AddWithValue("@SDT", txtSDT.Text);
-                cmd.Parameters.AddWithValue("@Email", txtEmail.Text);
-                cmd.Parameters.AddWithValue("@ChucVu", txtChucVu.Text);
-                cmd.Parameters.AddWithValue("@Luong", decimal.Parse(txtLuong.Text));
-
-                // Xử lý ảnh
-                string anh = string.Empty;
-                if (imgNhanVien.HasFile)
+                try
                 {
-                    anh = "~/Images/" + imgNhanVien.FileName; // Đường dẫn tới ảnh
-                    imgNhanVien.SaveAs(Server.MapPath(anh));
+                    string query = @"
+                        INSERT INTO tbl_NHANVIEN (PK_sMaNV, sTenNV, dNgaysinh, sGioitinh, sCCCD, sDiachia, sSDT, sEmail, dNgayvaolam, fLuongcb, sTinhtrang, FK_sMaCV, FK_sMaPB)
+                        VALUES (@MaNV, @Name, @BirthDate, @Gender, @IDCard, @Address, @Phone, @Email, @StartDate, @Salary, @Status, @PositionID, @DepartmentID)";
+
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@MaNV", maNV);
+                    cmd.Parameters.AddWithValue("@Name", name);
+                    cmd.Parameters.AddWithValue("@BirthDate", birthDate);
+                    cmd.Parameters.AddWithValue("@Gender", gender);
+                    cmd.Parameters.AddWithValue("@IDCard", idCard);
+                    cmd.Parameters.AddWithValue("@Address", address);
+                    cmd.Parameters.AddWithValue("@Phone", phone);
+                    cmd.Parameters.AddWithValue("@Email", email);
+                    cmd.Parameters.AddWithValue("@StartDate", startDate);
+                    cmd.Parameters.AddWithValue("@Salary", salary);
+                    cmd.Parameters.AddWithValue("@Status", status);
+                    cmd.Parameters.AddWithValue("@PositionID", positionID);
+                    cmd.Parameters.AddWithValue("@DepartmentID", departmentID);
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    ShowMessage("Thêm nhân viên thành công.", false);
                 }
-                cmd.Parameters.AddWithValue("@Anh", anh);
-
-                conn.Open();
-                cmd.ExecuteNonQuery();
-            }
-        }
-
-        private void UpdateEmployee()
-        {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                string query = "UPDATE NhanVien SET TenNhanVien = @TenNhanVien, GioiTinh = @GioiTinh, CCCD = @CCCD, NgayVaoLam = @NgayVaoLam, PhongBan = @PhongBan, TinhTrang = @TinhTrang, DiaChi = @DiaChi, SDT = @SDT, Email = @Email, ChucVu = @ChucVu, Luong = @Luong, Anh = @Anh WHERE MaNhanVien = @MaNhanVien";
-
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@MaNhanVien", txtMaNhanVien.Text);
-                cmd.Parameters.AddWithValue("@TenNhanVien", txtTenNhanVien.Text);
-                cmd.Parameters.AddWithValue("@GioiTinh", ddlGioiTinh.SelectedValue);
-                cmd.Parameters.AddWithValue("@CCCD", txtCCCD.Text);
-                cmd.Parameters.AddWithValue("@NgayVaoLam", DateTime.Parse(txtNgayVaoLam.Text));
-                cmd.Parameters.AddWithValue("@PhongBan", txtPhongBan.Text);
-                cmd.Parameters.AddWithValue("@TinhTrang", ddlTinhTrang.SelectedValue);
-                cmd.Parameters.AddWithValue("@DiaChi", txtDiaChi.Text);
-                cmd.Parameters.AddWithValue("@SDT", txtSDT.Text);
-                cmd.Parameters.AddWithValue("@Email", txtEmail.Text);
-                cmd.Parameters.AddWithValue("@ChucVu", txtChucVu.Text);
-                cmd.Parameters.AddWithValue("@Luong", decimal.Parse(txtLuong.Text));
-
-                // Xử lý ảnh
-                string anh = string.Empty;
-                if (imgNhanVien.HasFile)
+                catch (Exception ex)
                 {
-                    anh = "~/Images/" + imgNhanVien.FileName; // Đường dẫn tới ảnh
-                    imgNhanVien.SaveAs(Server.MapPath(anh));
+                    ShowMessage("Lỗi khi thêm nhân viên: " + ex.Message, true);
                 }
-                cmd.Parameters.AddWithValue("@Anh", anh);
-
-                conn.Open();
-                cmd.ExecuteNonQuery();
-            }
-        }
-
-        private void DeleteEmployee()
-        {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                string query = "DELETE FROM NhanVien WHERE MaNhanVien = @MaNhanVien";
-
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@MaNhanVien", txtMaNhanVien.Text);
-
-                conn.Open();
-                cmd.ExecuteNonQuery();
-            }
-        }
-
-        private void SearchEmployee()
-        {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                string query = "SELECT MaNhanVien, TenNhanVien, ChucVu, TinhTrang FROM NhanVien WHERE TenNhanVien LIKE @TenNhanVien";
-
-                SqlDataAdapter da = new SqlDataAdapter(query, conn);
-                da.SelectCommand.Parameters.AddWithValue("@TenNhanVien", "%" + txtTenNhanVien.Text + "%");
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-                gvNhanVien.DataSource = dt;
-                gvNhanVien.DataBind();
-            }
-        }
-
-        private void LoadEmployeeDetails(string maNhanVien)
-        {
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                string query = "SELECT * FROM NhanVien WHERE MaNhanVien = @MaNhanVien";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@MaNhanVien", maNhanVien);
-
-                conn.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-                if (reader.Read())
+                finally
                 {
-                    txtMaNhanVien.Text = reader["MaNhanVien"].ToString();
-                    txtTenNhanVien.Text = reader["TenNhanVien"].ToString();
-                    ddlGioiTinh.SelectedValue = reader["GioiTinh"].ToString();
-                    txtCCCD.Text = reader["CCCD"].ToString();
-                    txtNgayVaoLam.Text = Convert.ToDateTime(reader["NgayVaoLam"]).ToString("dd/MM/yyyy");
-                    txtPhongBan.Text = reader["PhongBan"].ToString();
-                    ddlTinhTrang.SelectedValue = reader["TinhTrang"].ToString();
-                    txtDiaChi.Text = reader["DiaChi"].ToString();
-                    txtSDT.Text = reader["SDT"].ToString();
-                    txtEmail.Text = reader["Email"].ToString();
-                    txtChucVu.Text = reader["ChucVu"].ToString();
-                    txtLuong.Text = reader["Luong"].ToString();
-                   /* previewImg.ImageUrl = reader["Anh"].ToString();
-                    previewImg.Style["display"] = "block";*/
+                    conn.Close();
                 }
-                reader.Close();
             }
         }
 
-        private void ClearForm()
+        private void UpdateEmployee(string employeeID, string name, DateTime birthDate, string gender, string idCard, string address, string phone, string email, DateTime startDate, float salary, string status, string positionID, string departmentID)
         {
-            txtMaNhanVien.Text = string.Empty;
-            txtTenNhanVien.Text = string.Empty;
-            ddlGioiTinh.ClearSelection();
-            txtCCCD.Text = string.Empty;
-            txtNgayVaoLam.Text = string.Empty;
-            txtPhongBan.Text = string.Empty;
-            ddlTinhTrang.ClearSelection();
-            txtDiaChi.Text = string.Empty;
-            txtSDT.Text = string.Empty;
-            txtEmail.Text = string.Empty;
-            txtChucVu.Text = string.Empty;
-            txtLuong.Text = string.Empty;
-           /* previewImg.ImageUrl = string.Empty;
-            previewImg.Style["display"] = "none";*/
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    string query = @"
+                        UPDATE tbl_NHANVIEN 
+                        SET sTenNV = @Name, dNgaysinh = @BirthDate, sGioitinh = @Gender, sCCCD = @IDCard, 
+                            sDiachia = @Address, sSDT = @Phone, sEmail = @Email, dNgayvaolam = @StartDate, 
+                            fLuongcb = @Salary, sTinhtrang = @Status, FK_sMaCV = @PositionID, FK_sMaPB = @DepartmentID
+                        WHERE PK_sMaNV = @EmployeeID";
+
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@EmployeeID", employeeID);
+                    cmd.Parameters.AddWithValue("@Name", name);
+                    cmd.Parameters.AddWithValue("@BirthDate", birthDate);
+                    cmd.Parameters.AddWithValue("@Gender", gender);
+                    cmd.Parameters.AddWithValue("@IDCard", idCard);
+                    cmd.Parameters.AddWithValue("@Address", address);
+                    cmd.Parameters.AddWithValue("@Phone", phone);
+                    cmd.Parameters.AddWithValue("@Email", email);
+                    cmd.Parameters.AddWithValue("@StartDate", startDate);
+                    cmd.Parameters.AddWithValue("@Salary", salary);
+                    cmd.Parameters.AddWithValue("@Status", status);
+                    cmd.Parameters.AddWithValue("@PositionID", positionID);
+                    cmd.Parameters.AddWithValue("@DepartmentID", departmentID);
+
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    ShowMessage("Cập nhật nhân viên thành công.", false);
+                }
+                catch (Exception ex)
+                {
+                    ShowMessage("Lỗi khi cập nhật nhân viên: " + ex.Message, true);
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+        }
+
+        protected void btnCancel_Click(object sender, EventArgs e)
+        {
+            ShowPanel(false);
+        }
+
+        private void ShowPanel(bool isVisible)
+        {
+            pnlAddEdit.CssClass = isVisible ? "border p-4 bg-light" : "border p-4 bg-light d-none";
+        }
+
+        private void ClearFields()
+        {
+            txtName.Text = "";
+            txtBirthDate.Text = "";
+            ddlGender.SelectedIndex = 0;
+            txtIDCard.Text = "";
+            txtAddress.Text = "";
+            txtPhone.Text = "";
+            txtEmail.Text = "";
+            txtStartDate.Text = "";
+            txtSalary.Text = "";
+            txtStatus.Text = "";
+            txtPositionID.Text = "";
+            txtDepartmentID.Text = "";
+        }
+
+        private void ShowMessage(string message, bool isError)
+        {
+            lblMessage.CssClass = isError ? "alert alert-danger" : "alert alert-success";
+            lblMessage.Text = message;
+            lblMessage.Visible = true;
+        }
+
+        protected void btnRefesh_Click(object sender, EventArgs e)
+        {
+            LoadEmployees();
         }
     }
 }
