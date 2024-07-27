@@ -10,9 +10,9 @@
 <body>
     <form id="form1" runat="server">
          <div id="contaner">
-            <h1 >Quản lý hợp đồng nhân viên</h1>
+            <h1 >Quản lý hợp đồng</h1>
             <div class="add_change">
-                <div style="font-weight: bold">Thêm mới/Chỉnh sửa Tài khoản</div>
+                <div style="font-weight: bold">Thêm mới/Chỉnh sửa hơp đồngn</div>
                 <div>
                     <div>
                         <div>Mã hợp đồng</div>
