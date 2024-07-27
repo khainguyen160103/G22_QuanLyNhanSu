@@ -12,6 +12,9 @@
         table { width: 100%; }
         th, td { text-align: left; padding: 8px; }
         tr:nth-child(even) { background-color: #f2f2f2; }
+        .btn {
+            margin-right: 5px;
+        }
     </style>
 </head>
 <body>
@@ -20,7 +23,7 @@
             <h1>Quản Lý Biên Bản Đánh Giá</h1>
             
             <!-- Phần thông báo -->
-            <asp:Label ID="lblMessage" runat="server" CssClass="alert d-none"></asp:Label>
+            <asp:Label ID="lblMessage" runat="server" CssClass="alert alert-danger d-none"></asp:Label>
 
             <!-- Phần tìm kiếm -->
             <div class="form-group">
@@ -29,19 +32,31 @@
             </div>
 
             <!-- Phần danh sách biên bản đánh giá -->
-            <asp:GridView ID="gvBienBan" runat="server" CssClass="table table-striped" AutoGenerateColumns="False" OnRowCommand="gvBienBan_RowCommand">
-                <Columns>
-                    <asp:BoundField DataField="dNgaylap" HeaderText="Ngày lập" />
-                    <asp:BoundField DataField="sTenNV" HeaderText="Nhân viên" />
-                    <asp:BoundField DataField="sNddanhgia" HeaderText="Nội dung đánh giá" />
-                    <asp:TemplateField HeaderText="Hành động">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Ngày lập</th>
+                        <th>Nhân viên</th>
+                        <th>Nội dung đánh giá</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <asp:Repeater ID="rptBienBan" runat="server" OnItemCommand="rptBienBan_ItemCommand">
                         <ItemTemplate>
-                            <asp:Button ID="btnEdit" runat="server" CommandName="Edit" CommandArgument='<%# Eval("PK_sMabienban") %>' Text="Sửa" CssClass="btn btn-primary" />
-                            <asp:Button ID="btnDelete" runat="server" CommandName="Delete" CommandArgument='<%# Eval("PK_sMabienban") %>' Text="Xóa" CssClass="btn btn-danger" OnClientClick='<%# "return confirmDelete(\"" + Eval("PK_sMabienban") + "\");" %>' />
+                            <tr>
+                                <td><%# Eval("dNgaylap", "{0:dd/MM/yyyy}") %></td>
+                                <td><%# Eval("sTenNV") %></td>
+                                <td><%# Eval("sNddanhgia") %></td>
+                                <td>
+                                    <asp:Button ID="btnEdit" runat="server" CommandName="Edit" CommandArgument='<%# Eval("PK_sMabienban") %>' Text="Sửa" CssClass="btn btn-primary" />
+                                    <asp:Button ID="btnDelete" runat="server" CommandName="Delete" CommandArgument='<%# Eval("PK_sMabienban") %>' Text="Xóa" CssClass="btn btn-danger" OnClientClick='<%# "return confirmDelete(\"" + Eval("PK_sMabienban") + "\");" %>' />
+                                </td>
+                            </tr>
                         </ItemTemplate>
-                    </asp:TemplateField>
-                </Columns>
-            </asp:GridView>
+                    </asp:Repeater>
+                </tbody>
+            </table>
 
             <!-- Phần thêm/sửa biên bản đánh giá -->
             <asp:Panel ID="pnlAddEdit" runat="server" CssClass="border p-4 bg-light d-none">
@@ -64,6 +79,7 @@
             </asp:Panel>
 
             <asp:Button ID="btnAddNew" runat="server" CssClass="btn btn-primary" OnClick="btnAddNew_Click" Text="Thêm Biên Bản Đánh Giá Mới" />
+            <asp:Button ID="btnRefesh" runat="server" CssClass="btn btn-secondary" OnClick="btnRefresh_Click" Text="Làm mới" />
         </div>
 
         <script type="text/javascript">
