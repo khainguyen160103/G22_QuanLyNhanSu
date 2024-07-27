@@ -12,7 +12,7 @@
          <div id="contaner">
             <h1 >Quản lý hợp đồng</h1>
             <div class="add_change">
-                <div style="font-weight: bold">Thêm mới/Chỉnh sửa hơp đồngn</div>
+                <div style="font-weight: bold">Thêm mới/Chỉnh sửa hơp đồng</div>
                 <div>
                     <div>
                         <div>Mã hợp đồng</div>
