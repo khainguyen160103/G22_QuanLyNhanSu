@@ -61,7 +61,7 @@ namespace QuanLyNhanSu.DangNhap
         }
         protected int isUserNameExit(string tenTK)
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings["QLNSConnectionString"].ConnectionString;
             using (SqlConnection sqlcon = new SqlConnection(connectionString))
             {
                 sqlcon.Open();
@@ -89,7 +89,7 @@ namespace QuanLyNhanSu.DangNhap
             else
             {
                 string qr = "SELECT COUNT(*) FROM tbl_TAIKHOAN WHERE sTaikhoan = @tenTK and sMatkhau COLLATE Latin1_General_CS_AS = @matkhau";
-                string connectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+                string connectionString = ConfigurationManager.ConnectionStrings["QLNSConnectionString"].ConnectionString;
 
                 using (SqlConnection sqlcon = new SqlConnection(connectionString))
                 {
@@ -115,7 +115,7 @@ namespace QuanLyNhanSu.DangNhap
         protected void setSession(string Maquyen, string tenTK, string MK)
         {
             string query = "SELECT FK_sMaquyen FROM tbl_TAIKHOAN WHERE sTaikhoan = @tenTK";
-            string connectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            string connectionString = ConfigurationManager.ConnectionStrings["QLNSConnectionString"].ConnectionString;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 connection.Open();

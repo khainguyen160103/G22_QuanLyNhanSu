@@ -3,16 +3,16 @@
   "WorkspaceRootPath": "C:\\git2\\G22_QuanLyNhanSu\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{2EFBC297-35BF-49FD-AF9B-1247B06DBB21}|QuanLyNhanSu\\QuanLyNhanSu.csproj|C:\\git2\\G22_QuanLyNhanSu\\quanlynhansu\\dangnhap\\frmdangnhap.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}",
-      "RelativeMoniker": "D:0:0:{2EFBC297-35BF-49FD-AF9B-1247B06DBB21}|QuanLyNhanSu\\QuanLyNhanSu.csproj|solutionrelative:quanlynhansu\\dangnhap\\frmdangnhap.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{2EFBC297-35BF-49FD-AF9B-1247B06DBB21}|QuanLyNhanSu\\QuanLyNhanSu.csproj|c:\\git2\\g22_quanlynhansu\\quanlynhansu\\dangnhap\\frmdangnhap.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{2EFBC297-35BF-49FD-AF9B-1247B06DBB21}|QuanLyNhanSu\\QuanLyNhanSu.csproj|solutionrelative:quanlynhansu\\dangnhap\\frmdangnhap.aspx.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{2EFBC297-35BF-49FD-AF9B-1247B06DBB21}|QuanLyNhanSu\\QuanLyNhanSu.csproj|C:\\git2\\G22_QuanLyNhanSu\\quanlynhansu\\dangnhap\\login.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
-      "RelativeMoniker": "D:0:0:{2EFBC297-35BF-49FD-AF9B-1247B06DBB21}|QuanLyNhanSu\\QuanLyNhanSu.csproj|solutionrelative:quanlynhansu\\dangnhap\\login.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+      "AbsoluteMoniker": "D:0:0:{2EFBC297-35BF-49FD-AF9B-1247B06DBB21}|QuanLyNhanSu\\QuanLyNhanSu.csproj|c:\\git2\\g22_quanlynhansu\\quanlynhansu\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{2EFBC297-35BF-49FD-AF9B-1247B06DBB21}|QuanLyNhanSu\\QuanLyNhanSu.csproj|solutionrelative:quanlynhansu\\web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2EFBC297-35BF-49FD-AF9B-1247B06DBB21}|QuanLyNhanSu\\QuanLyNhanSu.csproj|c:\\git2\\g22_quanlynhansu\\quanlynhansu\\dangnhap\\frmdangnhap.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}",
+      "RelativeMoniker": "D:0:0:{2EFBC297-35BF-49FD-AF9B-1247B06DBB21}|QuanLyNhanSu\\QuanLyNhanSu.csproj|solutionrelative:quanlynhansu\\dangnhap\\frmdangnhap.aspx||{57312C73-6202-49E9-B1E1-40EA1A6DC1F6}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,36 +22,28 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 1,
           "Children": [
             {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "FrmDangNhap.aspx.cs",
               "DocumentMoniker": "C:\\git2\\G22_QuanLyNhanSu\\QuanLyNhanSu\\DangNhap\\FrmDangNhap.aspx.cs",
               "RelativeDocumentMoniker": "QuanLyNhanSu\\DangNhap\\FrmDangNhap.aspx.cs",
               "ToolTip": "C:\\git2\\G22_QuanLyNhanSu\\QuanLyNhanSu\\DangNhap\\FrmDangNhap.aspx.cs",
               "RelativeToolTip": "QuanLyNhanSu\\DangNhap\\FrmDangNhap.aspx.cs",
-              "ViewState": "AQIAAHEAAAAAAAAAAAAvwD8AAAAMAAAA",
+              "ViewState": "AQIAAGAAAAAAAAAAAAAowAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-21T17:39:09.1Z",
+              "WhenOpened": "2024-07-28T21:43:19.815Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "Login.css",
-              "DocumentMoniker": "C:\\git2\\G22_QuanLyNhanSu\\QuanLyNhanSu\\DangNhap\\Login.css",
-              "RelativeDocumentMoniker": "QuanLyNhanSu\\DangNhap\\Login.css",
-              "ToolTip": "C:\\git2\\G22_QuanLyNhanSu\\QuanLyNhanSu\\DangNhap\\Login.css",
-              "RelativeToolTip": "QuanLyNhanSu\\DangNhap\\Login.css",
-              "ViewState": "AQIAAH4AAAAAAAAAAAAswJ0AAAAFAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2024-07-21T17:35:56.506Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
               "Title": "FrmDangNhap.aspx",
               "DocumentMoniker": "C:\\git2\\G22_QuanLyNhanSu\\QuanLyNhanSu\\DangNhap\\FrmDangNhap.aspx",
               "RelativeDocumentMoniker": "QuanLyNhanSu\\DangNhap\\FrmDangNhap.aspx",
@@ -59,7 +51,20 @@
               "RelativeToolTip": "QuanLyNhanSu\\DangNhap\\FrmDangNhap.aspx",
               "LogicalView": "7651a703-06e5-11d1-8ebd-00a0c90f26ea",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000195|",
-              "WhenOpened": "2024-07-21T17:35:36.224Z",
+              "WhenOpened": "2024-07-28T21:43:00.31Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Web.config",
+              "DocumentMoniker": "C:\\git2\\G22_QuanLyNhanSu\\QuanLyNhanSu\\Web.config",
+              "RelativeDocumentMoniker": "QuanLyNhanSu\\Web.config",
+              "ToolTip": "C:\\git2\\G22_QuanLyNhanSu\\QuanLyNhanSu\\Web.config",
+              "RelativeToolTip": "QuanLyNhanSu\\Web.config",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAA4AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2024-07-28T21:40:34.607Z",
               "EditorCaption": ""
             }
           ]
