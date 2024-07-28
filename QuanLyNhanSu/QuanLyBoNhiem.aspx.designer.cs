@@ -30,7 +30,7 @@ namespace QuanLyNhanSu
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText nhanvien;
+        protected global::System.Web.UI.WebControls.TextBox nhanvien;
 
         /// <summary>
         /// chucvu control.
@@ -39,7 +39,7 @@ namespace QuanLyNhanSu
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText chucvu;
+        protected global::System.Web.UI.WebControls.TextBox chucvu;
 
         /// <summary>
         /// phongban control.
@@ -48,7 +48,7 @@ namespace QuanLyNhanSu
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText phongban;
+        protected global::System.Web.UI.WebControls.TextBox phongban;
 
         /// <summary>
         /// luong control.
@@ -57,7 +57,7 @@ namespace QuanLyNhanSu
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText luong;
+        protected global::System.Web.UI.WebControls.TextBox luong;
 
         /// <summary>
         /// ngaycohieuluc control.
@@ -66,7 +66,7 @@ namespace QuanLyNhanSu
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl ngaycohieuluc;
+        protected global::System.Web.UI.WebControls.TextBox ngaycohieuluc;
 
         /// <summary>
         /// noidung control.
@@ -75,7 +75,7 @@ namespace QuanLyNhanSu
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlTextArea noidung;
+        protected global::System.Web.UI.WebControls.TextBox noidung;
 
         /// <summary>
         /// btnXoa control.
@@ -84,7 +84,7 @@ namespace QuanLyNhanSu
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlButton btnXoa;
+        protected global::System.Web.UI.WebControls.Button btnXoa;
 
         /// <summary>
         /// btnThemMoi control.
@@ -93,7 +93,7 @@ namespace QuanLyNhanSu
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlButton btnThemMoi;
+        protected global::System.Web.UI.WebControls.Button btnThemMoi;
 
         /// <summary>
         /// btnCapNhat control.
@@ -102,7 +102,7 @@ namespace QuanLyNhanSu
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlButton btnCapNhat;
+        protected global::System.Web.UI.WebControls.Button btnCapNhat;
 
         /// <summary>
         /// btnLamMoi control.
@@ -111,7 +111,7 @@ namespace QuanLyNhanSu
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlButton btnLamMoi;
+        protected global::System.Web.UI.WebControls.Button btnLamMoi;
 
         /// <summary>
         /// mabonhiem control.
@@ -120,7 +120,7 @@ namespace QuanLyNhanSu
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText mabonhiem;
+        protected global::System.Web.UI.WebControls.TextBox mabonhiem;
 
         /// <summary>
         /// btnTimKiem control.
@@ -129,7 +129,7 @@ namespace QuanLyNhanSu
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlButton btnTimKiem;
+        protected global::System.Web.UI.WebControls.Button btnTimKiem;
 
         /// <summary>
         /// GridViewBoNhiem control.
