@@ -41,6 +41,21 @@
                 padding: 10px;
                 margin-bottom: 10px;
             }
+             .column {
+            flex: 1;
+            padding: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
 
 
         </style>
@@ -68,11 +83,24 @@
     <button type="button" runat="server" id="btnThemMoi" OnClick="btnThemMoi_Click">Thêm mới</button>
     <button type="button" runat="server" id="btnCapNhat" OnClick="btnCapNhat_Click">Cập nhật</button>
     <button type="button" runat="server" id="btnLamMoi" OnClick="btnLamMoi_Click">Làm mới</button>
-</div>
+        </div>
         <div class="column">
             <label for="mabonhiem">Nhập mã bổ nhiệm để tìm kiếm hoặc xóa:</label>
              <input type="text" runat="server" id="mabonhiem" name="mabonhiem">
              <button type="button" runat="server" id="btnTimKiem" OnClick="btnTimKiem_Click">Tìm kiếm</button>
+        </div>
+          <div class="column">
+            <h2>Danh sách bổ nhiệm</h2>
+            <asp:GridView ID="GridViewBoNhiem" runat="server" AutoGenerateColumns="False">
+                <Columns>
+                    <asp:BoundField DataField="PK_sMabonhiem" HeaderText="Mã bổ nhiệm" />
+                    <asp:BoundField DataField="dNgaylap" HeaderText="Ngày lập" />
+                    <asp:BoundField DataField="dNgaycohieuluc" HeaderText="Ngày có hiệu lực" />
+                    <asp:BoundField DataField="FK_sMaNV" HeaderText="Mã nhân viên" />
+                    <asp:BoundField DataField="FK_sMaCV" HeaderText="Mã chức vụ" />
+                    <asp:BoundField DataField="FK_sMaPB" HeaderText="Mã phòng ban" />
+                </Columns>
+            </asp:GridView>
         </div>
     </div>
 </body>

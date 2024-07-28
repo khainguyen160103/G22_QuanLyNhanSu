@@ -15,7 +15,24 @@ namespace QuanLyNhanSu
    
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!IsPostBack)
+            {
+                LoadBoNhiemData();
+            }
             notification.Visible = false;
+        }
+        private void LoadBoNhiemData()
+        {
+            string connStr = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            using (SqlConnection conn = new SqlConnection(connStr))
+            {
+                string query = "SELECT PK_sMabonhiem, dNgaylap, dNgaycohieuluc, FK_sMaNV, FK_sMaCV, FK_sMaPB FROM tblBONHIEM";
+                SqlDataAdapter da = new SqlDataAdapter(query, conn);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                GridViewBoNhiem.DataSource = dt;
+                GridViewBoNhiem.DataBind();
+            }
         }
         protected void btnLamMoi_Click(object sender, EventArgs e)
         {
@@ -46,7 +63,7 @@ namespace QuanLyNhanSu
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["QLNSConnectionString"].ConnectionString))
+                using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString))
                 {
                     conn.Open();
                     string query = "SELECT * FROM tbl_BONHIEM WHERE PK_sMabonhiem = @MaBonhiem";
@@ -85,7 +102,7 @@ namespace QuanLyNhanSu
                 {
             try
             {
-                using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["QLNSConnectionString"].ConnectionString))
+                using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString))
                 {
                     conn.Open();
                     string query = "UPDATE tbl_BONHIEM SET dNgaycohieuluc = @Ngaycohieuluc, FK_sMaCV = @MaCV, FK_sMaPB = @MaPB WHERE PK_sMabonhiem = @MaBonhiem";
@@ -111,7 +128,7 @@ namespace QuanLyNhanSu
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["QLNSConnectionString"].ConnectionString))
+                using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString))
                 {
                     conn.Open();
                     string query = "DELETE FROM tbl_BONHIEM WHERE PK_sMabonhiem = @MaBonhiem";
@@ -133,7 +150,7 @@ namespace QuanLyNhanSu
         {
             try
             {
-                using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["QLNSConnectionString"].ConnectionString))
+                using (SqlConnection conn = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString))
                 {
                     conn.Open();
                     string query = "SELECT * FROM tbl_BONHIEM WHERE PK_sMabonhiem = @MaBonhiem";
