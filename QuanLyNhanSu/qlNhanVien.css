@@ -1,0 +1,136 @@
+﻿body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.container {
+   
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.add_change {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin: 20px auto;
+    width: 80%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+    .add_change div {
+        margin-bottom: 10px;
+    }
+
+    .add_change input[type="text"] {
+        width: calc(100% - 22px);
+        padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .add_change button {
+        padding: 10px 15px;
+        margin-right: 10px;
+        border: none;
+        border-radius: 5px;
+        background-color: #28a745;
+        color: #fff;
+        cursor: pointer;
+    }
+
+        .add_change button:hover {
+            background-color: #218838;
+        }
+
+.dsTaiKhoan {
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+table, th, td {
+    border: 1px solid #ccc;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+@media (max-width: 768px) {
+    #container {
+        width: 90%;
+        padding: 10px;
+    }
+
+    .add_change, .dsTaikhoan {
+        padding: 10px;
+    }
+
+        .add_change input[type="text"], .dsTaikhoan input[type="text"] {
+            width: calc(100% - 12px);
+        }
+
+        .add_change button {
+            margin-top: 10px;
+            width: 100%;
+        }
+
+    table {
+        width: 100%; 
+        margin-left: 0; 
+    }
+
+    table, th, td {
+        display: block;
+    }
+
+    th, td {
+        padding: 5px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #e2e2e2;
+    }
+
+        th::before {
+            content: attr(data-label);
+            font-weight: bold;
+            display: block;
+        }
+
+    td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        display: block;
+    }
+
+    tr {
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    thead {
+        display: none;
+    }
+}
