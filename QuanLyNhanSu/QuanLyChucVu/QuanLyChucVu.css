@@ -1,0 +1,71 @@
+﻿body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+@media (max-width: 768px) {
+    #container {
+        width: 90%;
+        padding: 10px;
+    }
+
+    .add_change, .DanhSachChucVu {
+        padding: 10px;
+    }
+
+        .add_change input[type="text"], .DanhSachChucVu input[type="text"] {
+            width: calc(100% - 12px);
+        }
+
+        .add_change button {
+            margin-top: 10px;
+            width: 100%;
+        }
+
+    table {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    table, th, td {
+        display: compact;
+    }
+
+    th, td {
+        padding: 5px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #e2e2e2;
+    }
+
+        th::before {
+            content: attr(data-label);
+            font-weight: bold;
+            display: block;
+        }
+
+    td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        display: block;
+    }
+
+    tr {
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    thead {
+        display: none;
+    }
+}
